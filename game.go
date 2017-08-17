@@ -9,21 +9,24 @@ import (
 	"net"
 	"os"
 	"strings"
+	"sync"
 )
 
 const maxNameLength = 25
 const maxDelay = 1000
 
+var Mutex = &sync.Mutex{}
+
 //To format the users output
 // http://www.isthe.com/chongo/tech/comp/ansi_escapes.html
 var (
-	home  = []byte{27, 91, 72}
-	clear = []byte{27, 91, 50, 74}
-	//middle = []byte{27, 91, 49, 52, 65, 27, 91, 57, 52, 68}
-	//middle      = []byte{27, 91, 4, 27, 91, 1, 31, 'm'}
-	down        = []byte{27, 91, 1, 66}
-	colorFirst  = []byte{27, 91, 32, 59, 46, 109}
-	colorNormal = []byte{27, 91, 30, 59, 45, 109}
+	home       = []byte{27, 91, 72}
+	clear      = []byte{27, 91, 50, 74}
+	down       = []byte{27, 91, 1, 66}
+	up         = []byte{27, 91, 65}
+	colorRed   = []byte("\x1b[33m")
+	colorGreen = []byte("\x1b[32m")
+	colorWhite = []byte("\x1b[37m")
 	//conf   Config
 )
 
@@ -41,9 +44,7 @@ func getDataFromFile(fileName string) ([]byte, error) {
 		os.Exit(1)
 	}
 	defer f.Close()
-
 	f.Read(data)
-
 	return data, nil
 }
 
@@ -57,15 +58,10 @@ func getPlayerData(conn net.Conn, splash []byte) (Player, error) {
 	if err != nil {
 		return Player{}, errors.New("Communication error")
 	}
-	_, err = conn.Write(colorFirst)
 	_, err = conn.Write(splash)
 	if err != nil {
 		return Player{}, errors.New("Communication error")
 	}
-	/*_, err = conn.Write(middle)
-	if err != nil {
-		return Player{}, errors.New("Communication error")
-	}*/
 
 	io := bufio.NewReader(conn)
 
@@ -89,41 +85,24 @@ func getPlayerData(conn net.Conn, splash []byte) (Player, error) {
 	return Player{Conn: conn, Name: name}, nil
 }
 
-func (player *Player) getPlayerTown() (string, error) {
-	player.writeToPlayer(colorFirst, false)
-	player.writeToPlayer([]byte(fmt.Sprintf("%s:", player.Name)), false)
-	player.writeToPlayer(colorNormal, false)
-
-	io := bufio.NewReader(player.Conn)
-
-	line, err := io.ReadString('\n')
-	if err != nil {
-		return "", errors.New("Communication error")
-	}
-	//player.writeToPlayer(down, false)
-	town := strings.Replace(strings.Replace(line, "\n", "", -1), "\r", "", -1)
-	//check is input correct
-	//TODO
-	return town, nil
-}
-
 func main() {
 
-	splash, _ := getDataFromFile("splash.txt")
+	go gameMaker()
 
+	splash, _ := getDataFromFile("splash.txt")
 	port := flag.Int("p", 4242, "Port to listen")
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("error in net.Listen : %s", err)
 	}
 	defer ln.Close()
-
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
 			log.Fatalf("error in ln.Accept : %s", err)
 		}
 		fmt.Printf("%v : new gamer\n", conn)
+		defer conn.Close()
 		go handleConnection(conn, splash)
 	}
 }
@@ -133,11 +112,22 @@ func handleConnection(conn net.Conn, splash []byte) {
 	if err != nil {
 		//
 	}
+	Mutex.Lock()
+	Players = append(Players, &player)
+	Mutex.Unlock()
+}
+
+func gameMaker() {
 	for {
-		town, err := player.getPlayerTown()
-		if err != nil {
-			//
+		if len(Players) > 1 {
+			p1 := Players[0]
+			p2 := Players[1]
+			Mutex.Lock()
+			Players = Players[2:]
+			Mutex.Unlock()
+			p1.inGame = true
+			p2.inGame = true
+			go Round(p1, p2)
 		}
-		fmt.Println(town)
 	}
 }

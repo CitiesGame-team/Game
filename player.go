@@ -2,13 +2,17 @@
 package main
 
 import (
+	"fmt"
 	"net"
-	//"time"
+	"time"
 )
 
 type Player struct {
-	Conn net.Conn
-	Name string
+	Conn   net.Conn
+	Name   string
+	Login  string
+	id     int
+	inGame bool
 }
 
 //TODO
@@ -25,5 +29,14 @@ func (player *Player) writeToPlayer(message []byte, clean bool) {
 	_, err := player.Conn.Write(message)
 	if err != nil {
 		//
+	}
+}
+
+func (player *Player) sendWait() {
+	for _, r := range `|/-\` {
+		player.Conn.Write(up)
+		player.Conn.Write([]byte(fmt.Sprintf("\nWaiting for opponent %c\n", r)))
+		time.Sleep(100 * time.Millisecond)
+		player.Conn.Write(up)
 	}
 }
