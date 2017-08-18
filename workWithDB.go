@@ -3,58 +3,82 @@ package workWithDB
 import (
 	"database/sql"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var (
-	cityDB   *sql.DB
-	playerDB *sql.DB
-	cityMap  = map[byte][]string{}
-)
-
-// Init Cities Data Base
+// Check city in Cities Data Base
 //
-func InitCityBase(driverName, dataSourceName string) (err error) {
-	cityDB, err = sql.Open(driverName, dataSourceName)
+func CheckCityBase(cityDB *sql.DB, cityName string, filePath string) (flag bool, err error) {
+	// Search in DB
+	rows, err := cityDB.Query(fmt.Sprintf("SELECT name FROM cities WHERE name = '%s'", cityName))
+	if err != nil {
+		return false, err
+	}
+	defer rows.Close()
+	if rows.Next() {
+		return true, nil
+	}
+	// Search in OSM
+	log.Println("Searching in OSM")
+	/* Планирую сделать так, чтобы лишние пробелы из City удалялясиь. При запросе пробелы буду менять на +, чтобы иметь возможность
+	искать такие города как "New York", "Nizhniy Tagil" и тд */
+	err = getJSON(filePath, fmt.Sprintf("http://nominatim.openstreetmap.org/search?format=json&q=%s&limit=1&featuretype=city", cityName))
+	if err != nil {
+		return false, err
+	}
+	f, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return false, err
+	}
+	str := string(f)
+	/* Планирую не искать подстроку в строке, а нормально парсить  JSON */
+	if strings.Contains(str, "\"type\":\"city\"") || strings.Contains(str, "\"type\":\"town\"") {
+		rows, err := cityDB.Query("SELECT MAX(id) FROM cities")
+		if err != nil {
+			return false, err
+		}
+		id := 0
+		if rows.Next() {
+			err = rows.Scan(&id)
+			if err != nil {
+				return false, err
+			}
+		}
+		id++
+		_, err = cityDB.Exec(fmt.Sprintf("INSERT INTO cities VALUES(%d, '%s', 1)", id, cityName))
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	} else {
+		return false, nil
+	}
+}
+
+func getJSON(filepath string, url string) (err error) {
+	// Create the file
+	out, err := os.Create(filepath)
 	if err != nil {
 		return err
 	}
-	for i := 'A'; i <= 'Z'; i++ {
-		names, err := cityDB.Query(fmt.Sprintf("SELECT name FROM cities WHERE name LIKE '%c%%'", i))
-		if err != nil {
-			fmt.Println(err.Error())
-			return err
-		}
-		defer names.Close()
-		for names.Next() {
-			nm := ""
-			err := names.Scan(&nm)
-			if err != nil {
-				return err
-			}
-			cityMap[nm[0]] = append(cityMap[nm[0]], nm)
-		}
-	}
-	return nil
-}
+	defer out.Close()
 
-// Check city in Cities Data Base
-//
-func CheckCityBase(cityName string) bool {
-	for i := 0; i < len(cityMap[cityName[0]]); i++ {
-		if cityMap[cityName[0]][i] == cityName {
-			return true
-		}
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
 	}
-	// Find in OSM
-	return false
-}
+	defer resp.Body.Close()
 
-// Init Players Data Base
-//
-func InitPlayerBase(driverName, dataSourceName string) (err error) {
-	playerDB, err = sql.Open(driverName, dataSourceName)
+	// Writer the body to file
+	_, err = io.Copy(out, resp.Body)
 	if err != nil {
 		return err
 	}
