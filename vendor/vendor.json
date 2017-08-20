@@ -1,0 +1,137 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"path": "appengine/cloudsql",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "XlNcYZzWvkShWxXuQRV/vc5qpxc=",
+			"path": "github.com/Bowery/prompt",
+			"revision": "eb8f7a6a197ce971ed0e9d4a739c628381d5f124",
+			"revisionTime": "2017-06-30T14:11:02Z"
+		},
+		{
+			"checksumSHA1": "ULnk7ggN82JFO0ZdBCmSsQH3Vh8=",
+			"path": "github.com/dchest/safefile",
+			"revision": "855e8d98f1852d48dde521e0522408d1fe7e836a",
+			"revisionTime": "2015-10-22T10:31:44Z"
+		},
+		{
+			"checksumSHA1": "sHHM9wZZEdyf3FqD+3i3NHxQz/U=",
+			"path": "github.com/go-sql-driver/mysql",
+			"revision": "37b91d8876474f11b8e419f2fa65b15824ab9b9c",
+			"revisionTime": "2017-08-18T04:13:38Z"
+		},
+		{
+			"checksumSHA1": "e/Kc2UOy1lKAy31xWlK37M1r2e8=",
+			"path": "github.com/google/shlex",
+			"revision": "6f45313302b9c56850fc17f99e40caebce98c716",
+			"revisionTime": "2015-01-27T13:39:51Z"
+		},
+		{
+			"checksumSHA1": "NKvKUGq0lp/GjLS7Ffp7BAjcoTg=",
+			"path": "github.com/kardianos/govendor",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "EDbwTD6uQOx+c13If7Jxo9hFbs4=",
+			"path": "github.com/kardianos/govendor/cliprompt",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "BmRrKMcxZC8KEJGAqWT71vKl4Xw=",
+			"path": "github.com/kardianos/govendor/context",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "dOHKd4E20ITWqZsPWH4aeJ76QBU=",
+			"path": "github.com/kardianos/govendor/help",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "QYQM+ccITeVnJ6j7fUv1TQ/UWAY=",
+			"path": "github.com/kardianos/govendor/internal/pathos",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "Bl6I6yMiK60dzOAfyO7As6MSPIk=",
+			"path": "github.com/kardianos/govendor/internal/vfilepath",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "2Vg+J79rEhmtnprErQ7fTZdneIk=",
+			"path": "github.com/kardianos/govendor/internal/vos",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "9/Iq6KL6yP6m1QtDVGdgQQv2k0c=",
+			"path": "github.com/kardianos/govendor/migrate",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "wL4SaLS/HTn32Gmq8kpYRr/cn68=",
+			"path": "github.com/kardianos/govendor/pkgspec",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "B+3eGc34fJuF5dHsOSCa9dSdHQY=",
+			"path": "github.com/kardianos/govendor/prompt",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "lxQI6AFQFOsBMh5mFsSEuh5K31I=",
+			"path": "github.com/kardianos/govendor/run",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "ZDlz1nWDmErU501lCChKbTT3kEs=",
+			"path": "github.com/kardianos/govendor/vcs",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "oXa3HaUXhXktMp4C0xTOSrzPDTE=",
+			"path": "github.com/kardianos/govendor/vendorfile",
+			"revision": "30b6c0748442fe8812c0be93d542e84335d323bb",
+			"revisionTime": "2017-08-15T23:09:40Z"
+		},
+		{
+			"checksumSHA1": "rJab1YdNhQooDiBWNnt7TLWPyBU=",
+			"path": "github.com/pkg/errors",
+			"revision": "c605e284fe17294bda444b34710735b29d1a9d90",
+			"revisionTime": "2017-05-05T04:36:39Z"
+		},
+		{
+			"checksumSHA1": "2N+zaafLJbM/BcU+j+/BER6Yiwk=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "43e60d72a8e2bd92ee98319ba9a384a0e9837c08",
+			"revisionTime": "2017-08-16T15:16:36Z"
+		},
+		{
+			"checksumSHA1": "TNJiDMoJEKYZyXo8Vkj37gqH5A0=",
+			"path": "golang.org/x/tools/go/vcs",
+			"revision": "84a35ef54dff3c5596983e180ec10919fc432242",
+			"revisionTime": "2017-03-01T08:02:44Z"
+		},
+		{
+			"checksumSHA1": "RDJpJQwkF012L6m/2BJizyOksNw=",
+			"path": "gopkg.in/yaml.v2",
+			"revision": "eb3733d160e74a9c7e442f435eb3bea458e1d19f",
+			"revisionTime": "2017-08-12T16:00:11Z"
+		}
+	],
+	"rootPath": "Game"
+}
