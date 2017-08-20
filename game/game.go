@@ -1,7 +1,7 @@
 package main
 
 import (
-	//	"Game/databases"
+	"Game/databases"
 	"bufio"
 	"errors"
 	"flag"
@@ -34,13 +34,13 @@ var (
 func getDataFromFile(fileName string) ([]byte, error) {
 	fileStat, err := os.Stat(fileName)
 	if err != nil {
-		//conf.Log.Printf("File %s does not exist: %v\n", fileName, err)
+		log.Printf("File %s does not exist: %v\n", fileName, err)
 		return []byte{}, err
 	}
 	data := make([]byte, fileStat.Size())
 	f, err := os.OpenFile(fileName, os.O_RDONLY, os.ModePerm)
 	if err != nil {
-		//conf.Log.Printf("Error while opening %s: %v\n", fileName, err)
+		log.Printf("Error while opening %s: %v\n", fileName, err)
 		os.Exit(1)
 	}
 	defer f.Close()
@@ -87,12 +87,11 @@ func getPlayerData(conn net.Conn, splash []byte) (Player, error) {
 
 func main() {
 
-	//db, _ := databases.InitCityBase("home/polina/go/src/Game/databases/sql/cities")
-	fmt.Println()
+	err := databases.InitCityDB("newuser:password@/cities", 10, 10)
 	go gameMaker()
 
 	splash, _ := getDataFromFile("splash.txt")
-	port := flag.Int("p", 4242, "Port to listen")
+	port := flag.Int("p", 8080, "Port to listen")
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("error in net.Listen : %s", err)
@@ -103,7 +102,6 @@ func main() {
 		if err != nil {
 			log.Fatalf("error in ln.Accept : %s", err)
 		}
-		fmt.Printf("%v : new gamer\n", conn)
 		go handleConnection(conn, splash)
 	}
 }
@@ -117,13 +115,16 @@ func handleConnection(conn net.Conn, splash []byte) {
 	Mutex.Lock()
 	Players = append(Players, &player)
 	Mutex.Unlock()
+
+	opponentsTown := ""
 	for {
 		if player.inGame == 1 {
 			defer close(player.ch)
-			town, _ := player.getTown()
+			town, _ := player.getTown(opponentsTown)
 			player.ch <- "\x1b[32m" + player.Name + "\x1b[37m: " + town + "\n"
-			str, ok := <-player.ch
-			if str == "" || !ok {
+			opponentsTown, _ = <-player.ch
+			/*if something_bad {
+				opponentsTown = ""
 				player.inGame = 0
 				close(player.ch)
 				player.ch = nil
@@ -132,12 +133,15 @@ func handleConnection(conn net.Conn, splash []byte) {
 				Mutex.Unlock()
 				fmt.Println("communication problems\n")
 			} else {
-				player.Conn.Write([]byte(str))
-			}
+			*/
+			player.Conn.Write([]byte(opponentsTown))
+			//}
 		} else if player.inGame == 2 {
 			defer close(player.ch)
-			str, ok := <-player.ch
-			if !ok || str == "" {
+			opponentsTown, _ := <-player.ch
+			fmt.Println(opponentsTown[len(opponentsTown):])
+			/*if something_bad {
+				opponentsTown == ""
 				player.inGame = 0
 				close(player.ch)
 				player.ch = nil
@@ -146,10 +150,11 @@ func handleConnection(conn net.Conn, splash []byte) {
 				Mutex.Unlock()
 				fmt.Println("communication problems\n")
 			} else {
-				player.Conn.Write([]byte(str))
-				town, _ := player.getTown()
-				player.ch <- "\x1b[32m" + player.Name + "\x1b[37m: " + town + "\n"
-			}
+			*/
+			player.Conn.Write([]byte(opponentsTown))
+			town, _ := player.getTown(opponentsTown)
+			player.ch <- "\x1b[32m" + player.Name + "\x1b[37m: " + town + "\n"
+			//}
 		} else {
 			player.sendWait()
 		}

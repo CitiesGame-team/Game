@@ -2,6 +2,7 @@
 package main
 
 import (
+	"Game/databases"
 	"bufio"
 	"errors"
 	"fmt"
@@ -30,17 +31,32 @@ func (player *Player) sendWait() {
 	}
 }
 
-func (player *Player) getTown() (string, error) {
-	player.Conn.Write(colorRed)
-	player.Conn.Write([]byte(fmt.Sprintf("%s:", player.Name)))
-	player.Conn.Write(colorWhite)
+func (player *Player) getTown(str string) (string, error) {
+	var town string
+	for {
+		player.Conn.Write(colorRed)
+		player.Conn.Write([]byte(fmt.Sprintf("%s:", player.Name)))
+		player.Conn.Write(colorWhite)
 
-	io := bufio.NewReader(player.Conn)
+		io := bufio.NewReader(player.Conn)
 
-	line, err := io.ReadString('\n')
-	if err != nil {
-		return "", errors.New("Communication error")
+		line, err := io.ReadString('\n')
+		if err != nil {
+			return "", errors.New("Communication error")
+		}
+		town = strings.Replace(strings.Replace(line, "\n", "", -1), "\r", "", -1)
+		town = strings.ToUpper(town[:1]) + strings.ToLower(town[1:])
+
+		exist, _ := databases.CheckCityDB(town)
+		if !exist {
+			player.Conn.Write(colorRed)
+			player.Conn.Write([]byte(fmt.Sprintf("Unknown town. Try again.\n")))
+		} else if str != "" && str[len(str)-2:len(str)-1] != strings.ToLower(town[:1]) {
+			player.Conn.Write(colorRed)
+			player.Conn.Write([]byte(fmt.Sprintf("Think up a city starts with the letter %s.\n", strings.ToUpper(str[len(str)-2:len(str)-1]))))
+		} else {
+			break
+		}
 	}
-	town := strings.Replace(strings.Replace(line, "\n", "", -1), "\r", "", -1)
 	return town, nil
 }
