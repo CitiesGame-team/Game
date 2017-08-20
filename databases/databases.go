@@ -177,6 +177,43 @@ func CheckPlayerDB(name string, pass string) (flagName bool, flagPass bool, err 
 	return flagName, flagPass, nil
 }
 
+// Add player in Players Data Base
+//
+func AddPlayerDB(name string, pass string) (flag bool, err error) {
+	log.Println(fmt.Sprintf("Adding in Players Data Base \"%s : %s\"", name, pass))
+
+	ex, _, err := CheckPlayerDB(name, pass)
+	if err != nil {
+		return false, err
+	}
+	if ex {
+		return false, nil
+	}
+
+	rows, err := playerDB.Query("SELECT MAX(id) FROM players")
+	if err != nil {
+		return false, err
+	}
+
+	id := 0
+	if rows.Next() {
+		err = rows.Scan(&id)
+		if err != nil {
+			return false, err
+		}
+	} else {
+		// return // Ошибка
+	}
+	id++
+	_, err = playerDB.Exec(fmt.Sprintf("INSERT INTO players VALUES(%d, '%s', '%s')", id, name, pass))
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+
+}
+
 // Close Players Data Base
 //
 func ClosePlayerDB() (err error) {

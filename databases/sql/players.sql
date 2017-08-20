@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `players` (
 
 
 
-INSERT INTO `cities` (`id`, `name`, `pass`) VALUES
+INSERT INTO `players` (`id`, `name`, `pass`) VALUES
 (0, 'GeographyGameBot', '0123456789');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
