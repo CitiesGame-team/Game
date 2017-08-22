@@ -18,9 +18,9 @@ func init() {
 	orm.RegisterModel(new(CityModel))
 }
 
-func CityExists(name string) bool {
+func CityExists(name string) (bool, error) {
 	_, err := CityGet(name)
-	return err == nil
+	return err == nil, err
 }
 
 func CityGet(name string) (CityModel, error) {

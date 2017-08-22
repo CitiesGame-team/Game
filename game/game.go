@@ -6,12 +6,11 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
 	"strings"
 	"sync"
 
 	"../config"
-	"../databases"
+	"../helpers"
 )
 
 const maxNameLength = 25
@@ -31,23 +30,6 @@ var (
 	colorWhite = []byte("\x1b[37m")
 	//conf   Config
 )
-
-func getDataFromFile(fileName string) ([]byte, error) {
-	fileStat, err := os.Stat(fileName)
-	if err != nil {
-		log.Printf("File %s does not exist: %v\n", fileName, err)
-		return []byte{}, err
-	}
-	data := make([]byte, fileStat.Size())
-	f, err := os.OpenFile(fileName, os.O_RDONLY, os.ModePerm)
-	if err != nil {
-		log.Printf("Error while opening %s: %v\n", fileName, err)
-		os.Exit(1)
-	}
-	defer f.Close()
-	f.Read(data)
-	return data, nil
-}
 
 // Get data of player and return the structure
 func getPlayerData(conn net.Conn, splash []byte) (Player, error) {
@@ -89,11 +71,9 @@ func getPlayerData(conn net.Conn, splash []byte) (Player, error) {
 func RunGame(conf config.ProjectConfig) {
 	log.Printf("Starting %s...", conf.Name)
 
-	err := databases.InitCityDB(conf.Db.ConnStr, conf.Db.PoolMaxIdle, conf.Db.PoolMaxOpen)
+	splash, _ := helpers.ReadFile(conf.SplashFile)
 
 	go gameMaker()
-
-	splash, _ := getDataFromFile(conf.SplashFile)
 
 	ln, err := net.Listen("tcp", fmt.Sprintf("%s:%d", conf.Server.Host, conf.Server.Port))
 	if err != nil {

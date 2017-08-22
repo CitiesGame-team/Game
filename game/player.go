@@ -8,7 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"../databases"
+	"log"
+
+	"../helpers"
 )
 
 type Player struct {
@@ -46,8 +48,9 @@ func (player *Player) getTown(str string) (string, error) {
 		}
 		town = strings.Replace(strings.Replace(line, "\n", "", -1), "\r", "", -1)
 		town = strings.ToUpper(town[:1]) + strings.ToLower(town[1:])
+		log.Printf("town: %q (%s)", town, err)
 
-		exist, _ := databases.CheckCityDB(town)
+		exist, _ := helpers.CityExists(town)
 		if !exist {
 			player.Conn.Write(colorRed)
 			player.Conn.Write([]byte(fmt.Sprintf("Unknown town. Try again.\n")))
