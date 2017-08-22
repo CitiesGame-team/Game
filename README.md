@@ -1,5 +1,13 @@
 # Cities game
 
+## Initialize database
+
+When you start server first time, do not forget to init db:
+
+```
+make init
+```
+
 ## Run local server
 
 By default server will listen to _*:9000_.
