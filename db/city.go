@@ -17,3 +17,18 @@ type CityModel struct {
 func init() {
 	orm.RegisterModel(new(CityModel))
 }
+
+func CityExists(name string) bool {
+	o := orm.NewOrm()
+	city := CityModel{Name: name}
+
+	err := o.Read(&city, "Name")
+	return err == nil
+}
+
+func CityAdd(name string) (bool, error) {
+	o := orm.NewOrm()
+	city := CityModel{Name: name}
+	created, _, err := o.ReadOrCreate(&city, "Name")
+	return created, err
+}

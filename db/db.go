@@ -6,9 +6,9 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func InitDB(dbConf config.DatabaseConfig) error {
+func InitDB(dbConf config.DatabaseConfig, connName string) error {
 	orm.RegisterDriver("mysql", orm.DRMySQL)
-	return orm.RegisterDataBase("default", "mysql",
+	return orm.RegisterDataBase(connName, "mysql",
 		dbConf.ConnStr, dbConf.PoolMaxIdle, dbConf.PoolMaxOpen)
 }
 

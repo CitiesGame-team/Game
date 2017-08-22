@@ -2,14 +2,12 @@ package main
 
 import (
 	"flag"
-
+	"fmt"
 	"log"
 
 	"./config"
 	"./db"
 	"./game"
-
-	"fmt"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -24,14 +22,14 @@ func main() {
 		panic(err)
 	}
 
-	err = db.InitDB(*conf.Db)
+	connName := "default"
+	err = db.InitDB(*conf.Db, connName)
 	if err != nil {
 		panic(fmt.Sprintf("can't connect to db: %s", err))
 	}
 
 	if *isInit {
-		err = orm.RunSyncdb("default", true, true)
-
+		err = orm.RunSyncdb(connName, true, true)
 		if err != nil {
 			log.Printf("%s", err)
 		}
