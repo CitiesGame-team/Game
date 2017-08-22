@@ -1,7 +1,8 @@
 package main
 
 import (
-	"Game/databases"
+	"../config"
+	"../databases"
 	"bufio"
 	"errors"
 	"flag"
@@ -86,13 +87,21 @@ func getPlayerData(conn net.Conn, splash []byte) (Player, error) {
 }
 
 func main() {
+	confFile := flag.String("config", "./config.yml", "Configuration file")
+	conf, err := config.ReadProjectConfig(*confFile)
+	if err != nil {
+		panic(err)
+	}
 
-	err := databases.InitCityDB("newuser:password@/cities", 10, 10)
+	log.Printf("Starting %s...", conf.Name)
+
+	err = databases.InitCityDB(conf.Db.ConnStr, conf.Db.PoolMaxIdle, conf.Db.PoolMaxOpen)
+
 	go gameMaker()
 
-	splash, _ := getDataFromFile("splash.txt")
-	port := flag.Int("p", 8080, "Port to listen")
-	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	splash, _ := getDataFromFile(conf.SplashFile)
+
+	ln, err := net.Listen("tcp", fmt.Sprintf("%s:%d", conf.Server.Host, conf.Server.Port))
 	if err != nil {
 		log.Fatalf("error in net.Listen : %s", err)
 	}

@@ -2,7 +2,7 @@
 package main
 
 import (
-	"Game/databases"
+	"../databases"
 	"bufio"
 	"errors"
 	"fmt"
