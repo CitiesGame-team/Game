@@ -1,4 +1,4 @@
-package main
+package game
 
 import (
 	"../config"
@@ -86,7 +86,7 @@ func getPlayerData(conn net.Conn, splash []byte) (Player, error) {
 	return Player{Conn: conn, Name: name}, nil
 }
 
-func main() {
+func RunGame() {
 	confFile := flag.String("config", "./config.yml", "Configuration file")
 	conf, err := config.ReadProjectConfig(*confFile)
 	if err != nil {

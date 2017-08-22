@@ -1,5 +1,4 @@
-// cities project main.go
-package main
+package game
 
 import (
 	"../databases"
