@@ -1,7 +1,20 @@
 package main
 
-import "./game"
+import (
+	"flag"
+
+	"./config"
+	"./game"
+)
 
 func main() {
-	game.RunGame()
+	confFile := flag.String("config", "./config.yml", "Configuration file")
+	flag.Parse()
+
+	conf, err := config.ReadProjectConfig(*confFile)
+	if err != nil {
+		panic(err)
+	}
+
+	game.RunGame(conf)
 }

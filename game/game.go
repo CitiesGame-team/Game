@@ -3,7 +3,6 @@ package game
 import (
 	"bufio"
 	"errors"
-	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -87,18 +86,10 @@ func getPlayerData(conn net.Conn, splash []byte) (Player, error) {
 	return Player{Conn: conn, Name: name}, nil
 }
 
-func RunGame() {
-	confFile := flag.String("config", "./config.yml", "Configuration file")
-	flag.Parse()
-
-	conf, err := config.ReadProjectConfig(*confFile)
-	if err != nil {
-		panic(err)
-	}
-
+func RunGame(conf config.ProjectConfig) {
 	log.Printf("Starting %s...", conf.Name)
 
-	err = databases.InitCityDB(conf.Db.ConnStr, conf.Db.PoolMaxIdle, conf.Db.PoolMaxOpen)
+	err := databases.InitCityDB(conf.Db.ConnStr, conf.Db.PoolMaxIdle, conf.Db.PoolMaxOpen)
 
 	go gameMaker()
 

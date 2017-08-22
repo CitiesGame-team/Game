@@ -1,5 +1,6 @@
 fmt:
-	find . -name '*.go' | xargs gofmt -s -w
+	find . -name '*.go' -not -path "./vendor/*" | xargs gofmt -s -w
+	find . -name '*.go' -not -path "./vendor/*" | xargs goimports -w
 
 run_main:
 	go run main.go
