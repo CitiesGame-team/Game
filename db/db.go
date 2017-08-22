@@ -11,7 +11,3 @@ func InitDB(dbConf config.DatabaseConfig, connName string) error {
 	return orm.RegisterDataBase(connName, "mysql",
 		dbConf.ConnStr, dbConf.PoolMaxIdle, dbConf.PoolMaxOpen)
 }
-
-func GetDB() {
-
-}

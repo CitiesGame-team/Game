@@ -8,7 +8,6 @@ import (
 	"./config"
 	"./db"
 	"./game"
-
 	"github.com/astaxie/beego/orm"
 )
 

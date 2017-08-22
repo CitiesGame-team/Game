@@ -19,16 +19,22 @@ func init() {
 }
 
 func CityExists(name string) bool {
+	_, err := CityGet(name)
+	return err == nil
+}
+
+func CityGet(name string) (CityModel, error) {
 	o := orm.NewOrm()
 	city := CityModel{Name: name}
 
 	err := o.Read(&city, "Name")
-	return err == nil
+	return city, err
 }
 
 func CityAdd(name string) (bool, error) {
 	o := orm.NewOrm()
 	city := CityModel{Name: name}
+
 	created, _, err := o.ReadOrCreate(&city, "Name")
 	return created, err
 }
