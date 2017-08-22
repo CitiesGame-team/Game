@@ -4,20 +4,33 @@ package main
 import (
 	"Game/databases"
 	"bufio"
-	"errors"
+	//	"errors"
 	"fmt"
+	"log"
 	"net"
 	"strings"
+	"sync"
 	"time"
 )
 
 type Player struct {
-	Conn   net.Conn
-	Name   string
-	Login  string
-	id     int
-	inGame int
-	ch     chan string
+	Conn    net.Conn
+	Name    string
+	Login   string
+	time    int
+	online  bool
+	offline chan bool
+	game    *Game
+}
+
+type Game struct {
+	chIn         chan string
+	chOut        chan string
+	opponentName string
+	priority     int
+	lock         sync.Mutex
+	stage        *int
+	lastTown     string
 }
 
 var Players []*Player
@@ -31,32 +44,53 @@ func (player *Player) sendWait() {
 	}
 }
 
-func (player *Player) getTown(str string) (string, error) {
-	var town string
+func (player *Player) reader() {
+	io := bufio.NewReader(player.Conn)
 	for {
-		player.Conn.Write(colorRed)
-		player.Conn.Write([]byte(fmt.Sprintf("%s:", player.Name)))
-		player.Conn.Write(colorWhite)
-
-		io := bufio.NewReader(player.Conn)
-
-		line, err := io.ReadString('\n')
+		time.Sleep(100 * time.Millisecond)
+		message, err := io.ReadString('\n')
 		if err != nil {
-			return "", errors.New("Communication error")
+			log.Println(err.Error())
+			player.online = false
+			player.offline <- true
+			return
 		}
-		town = strings.Replace(strings.Replace(line, "\n", "", -1), "\r", "", -1)
-		town = strings.ToUpper(town[:1]) + strings.ToLower(town[1:])
+		message = strings.Replace(strings.Replace(message, "\n", "", -1), "\r", "", -1)
 
-		exist, _ := databases.CheckCityDB(town)
-		if !exist {
-			player.Conn.Write(colorRed)
-			player.Conn.Write([]byte(fmt.Sprintf("Unknown town. Try again.\n")))
-		} else if str != "" && str[len(str)-2:len(str)-1] != strings.ToLower(town[:1]) {
-			player.Conn.Write(colorRed)
-			player.Conn.Write([]byte(fmt.Sprintf("Think up a city starts with the letter %s.\n", strings.ToUpper(str[len(str)-2:len(str)-1]))))
-		} else {
-			break
+		if message == "exit" {
+			player.online = false
+			player.offline <- true
+			return
+		} else if message == "" {
+
+		} else if player.game != nil && player.game.priority == *player.game.stage {
+
+			str := player.game.lastTown
+			words := strings.Split(message, " ")
+			town := strings.ToUpper(words[0][:1]) + strings.ToLower(words[0][1:])
+			for _, word := range words[1:] {
+				town = town + " " + strings.ToUpper(word[:1]) + strings.ToLower(word[1:])
+			}
+			exist, _ := databases.CheckCityDB(town)
+			if !exist {
+				player.Conn.Write(colorRed)
+				player.Conn.Write([]byte(fmt.Sprintf("Unknown town. Try again.\n")))
+				player.Conn.Write(colorWhite)
+			} else if str != "" && str[len(str)-1:] != strings.ToLower(town[:1]) {
+				player.Conn.Write(colorRed)
+				player.Conn.Write([]byte(fmt.Sprintf("Think up a city starts with the letter %s.\n", strings.ToUpper(str[len(str)-1:]))))
+				player.Conn.Write(colorWhite)
+			} else {
+				player.inc()
+				player.game.chOut <- town
+			}
+			player.Conn.Write(colorWhite)
 		}
 	}
-	return town, nil
+}
+
+func (player *Player) inc() {
+	player.game.lock.Lock()
+	defer player.game.lock.Unlock()
+	*player.game.stage = (*player.game.stage + 1) % 2
 }
