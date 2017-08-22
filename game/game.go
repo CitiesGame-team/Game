@@ -1,8 +1,6 @@
 package game
 
 import (
-	"../config"
-	"../databases"
 	"bufio"
 	"errors"
 	"flag"
@@ -12,6 +10,9 @@ import (
 	"os"
 	"strings"
 	"sync"
+
+	"../config"
+	"../databases"
 )
 
 const maxNameLength = 25
@@ -88,6 +89,8 @@ func getPlayerData(conn net.Conn, splash []byte) (Player, error) {
 
 func RunGame() {
 	confFile := flag.String("config", "./config.yml", "Configuration file")
+	flag.Parse()
+
 	conf, err := config.ReadProjectConfig(*confFile)
 	if err != nil {
 		panic(err)

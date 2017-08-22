@@ -1,29 +1,30 @@
 package config
 
 import (
-	"gopkg.in/yaml.v2"
-	"os"
 	"fmt"
 	"io/ioutil"
+	"os"
+
+	"gopkg.in/yaml.v2"
 )
 
 type DatabaseConfig struct {
 	DriverName  string `yaml:"driver_name"`
 	ConnStr     string `yaml:"conn_string"`
-	PoolMaxIdle int `yaml:"pool_max_idle"`
-	PoolMaxOpen int `yaml:"pool_max_open"`
+	PoolMaxIdle int    `yaml:"pool_max_idle"`
+	PoolMaxOpen int    `yaml:"pool_max_open"`
 }
 
 type ServerConfig struct {
-	Port int `yaml:"port"`
+	Port int    `yaml:"port"`
 	Host string `yaml:"host"`
 }
 
 type ProjectConfig struct {
-	Name       string `yaml:"name"`
-	SplashFile string `yaml:"splash_file"`
+	Name       string          `yaml:"name"`
+	SplashFile string          `yaml:"splash_file"`
 	Db         *DatabaseConfig `yaml:"db"`
-	Server     *ServerConfig `yaml:"server"`
+	Server     *ServerConfig   `yaml:"server"`
 }
 
 func ReadYAML(fName string, dest interface{}) error {

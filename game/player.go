@@ -1,13 +1,14 @@
 package game
 
 import (
-	"../databases"
 	"bufio"
 	"errors"
 	"fmt"
 	"net"
 	"strings"
 	"time"
+
+	"../databases"
 )
 
 type Player struct {
