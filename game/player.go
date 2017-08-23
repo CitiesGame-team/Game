@@ -14,13 +14,13 @@ import (
 )
 
 type Player struct {
-	Conn    net.Conn
-	Name    string
-	Login   string
-	time    int
-	online  bool
-	offline chan bool
-	game    *Game
+	Conn        net.Conn
+	Name        string
+	Login       string
+	time        int
+	offline     chan bool
+	gameChanges chan string
+	game        *Game
 }
 
 type Game struct {
@@ -33,7 +33,7 @@ type Game struct {
 	lastTown     string
 }
 
-var Players []*Player
+var Players map[*Player]bool = make(map[*Player]bool)
 
 func (player *Player) sendWait() {
 	for _, r := range `|/-\` {
@@ -51,15 +51,15 @@ func (player *Player) reader() {
 		message, err := io.ReadString('\n')
 		if err != nil {
 			log.Println(err.Error())
-			player.online = false
 			player.offline <- true
+			player.game.chOut <- "exit"
 			return
 		}
 		message = strings.Replace(strings.Replace(message, "\n", "", -1), "\r", "", -1)
 
 		if message == "exit" {
-			player.online = false
 			player.offline <- true
+			player.game.chOut <- "exit"
 			return
 		} else if message == "" {
 

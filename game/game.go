@@ -17,7 +17,7 @@ import (
 const maxNameLength = 25
 const maxDelay = 1000
 
-var Mutex = &sync.Mutex{}
+var Mutex *sync.Mutex = &sync.Mutex{}
 
 //To format the users output
 // http://www.isthe.com/chongo/tech/comp/ansi_escapes.html
@@ -82,8 +82,9 @@ func getPlayerData(conn net.Conn, splash []byte) (*Player, error) {
 	}
 
 	log.Printf("New user connected: %s\n", name)
-	chanal := make(chan bool)
-	return &Player{Conn: conn, Name: name, online: true, offline: chanal}, nil
+	off := make(chan bool)
+	game := make(chan string)
+	return &Player{Conn: conn, Name: name, offline: off, gameChanges: game}, nil
 }
 
 func init() {
@@ -126,32 +127,42 @@ func handleConnection(conn net.Conn, splash []byte) {
 	if err != nil {
 		log.Printf("Couldn't log in: %s\n", err.Error())
 	}
-
 	addPlayer(player)
-
 	go player.reader()
 	for {
-		if !player.online {
-			log.Printf("User %s disconnected.\n", player.Name)
-			//TODO
-			//remove player
-			return
-		} else if player.game == nil {
-			//player.sendWait()
+		time.Sleep(10 * time.Millisecond)
+		if player.game == nil {
+			select {
+			case <-player.offline:
+				log.Printf("User %s disconnected.\n", player.Name)
+				removePlayer(player)
+			case massege := <-player.gameChanges:
+				player.Conn.Write([]byte(massege))
+			case <-time.After(time.Second * 120):
+				log.Printf("User %s starts game with bot", player.Name)
+				//go bot(player)
+			}
 		} else {
 			select {
 			case <-player.offline:
 				log.Printf("User %s disconnected.\n", player.Name)
 				//and something more
 				return
-			case town := <-player.game.chIn:
-				player.Conn.Write(colorRed)
-				player.Conn.Write([]byte(player.game.opponentName + ": "))
-				player.Conn.Write(colorWhite)
-				player.Conn.Write([]byte(town + "\n"))
-				player.game.lastTown = town
+			case command := <-player.game.chIn:
+				if command == "exit" {
+					player.Conn.Write(colorRed)
+					player.Conn.Write([]byte(fmt.Sprintf("Your oppnent %s disconnected. You are winner.\nWait for a new opponent.\n", player.game.opponentName)))
+					player.Conn.Write(colorWhite)
+					player.game = nil
+					Players[player] = true
+				} else {
+					player.Conn.Write(colorRed)
+					player.Conn.Write([]byte(player.game.opponentName + ": "))
+					player.Conn.Write(colorWhite)
+					player.Conn.Write([]byte(command + "\n"))
+					player.game.lastTown = command
+				}
 			case <-time.After(time.Second * 120):
-
 				if player.game.priority != *player.game.stage {
 					player.Conn.Write([]byte("You are winner.\n"))
 				} else {
@@ -167,7 +178,14 @@ func handleConnection(conn net.Conn, splash []byte) {
 func addPlayer(p *Player) {
 	Mutex.Lock()
 	defer Mutex.Unlock()
-	Players = append(Players, p)
+	Players[p] = true
+}
+
+func removePlayer(p *Player) {
+	Mutex.Lock()
+	defer Mutex.Unlock()
+	delete(Players, p)
+
 }
 
 func gameMaker() {
@@ -181,23 +199,33 @@ func safetyGameMaker() {
 	Mutex.Lock()
 	defer Mutex.Unlock()
 	if len(Players) > 1 {
-		p1 := Players[0]
-		p2 := Players[1]
-		Players = Players[2:]
+		i := 0
+		var p1, p2 *Player
+		for p, _ := range Players {
+			if i == 0 {
+				p1 = p
+				delete(Players, p)
+			} else if i == 1 {
+				p2 = p
+				delete(Players, p)
+			} else {
+				break
+			}
+			i++
+		}
 		ch1 := make(chan string)
 		ch2 := make(chan string)
-		p1.Conn.Write(colorGreen)
-		p1.Conn.Write([]byte(fmt.Sprintf("Your oponent is %s. You starts.\n", p2.Name)))
-		p1.Conn.Write(colorWhite)
-		p2.Conn.Write(colorGreen)
-		p2.Conn.Write(([]byte(fmt.Sprintf("Your oponent is %s. %s starts.\n", p1.Name, p1.Name))))
-		p2.Conn.Write(colorWhite)
+
+		massege := string(colorGreen) +
+			fmt.Sprintf("Your oponent is %s. You starts.\n", p2.Name) + string(colorWhite)
+		p1.gameChanges <- massege
+
+		massege = string(colorGreen) +
+			fmt.Sprintf("Your oponent is %s. %s starts.\n", p1.Name, p1.Name) + string(colorWhite)
+		p2.gameChanges <- massege
+
 		p1.game = &Game{chIn: ch1, chOut: ch2, opponentName: p2.Name, priority: 0, stage: new(int), lastTown: ""}
 		p2.game = &Game{chIn: ch2, chOut: ch1, opponentName: p1.Name, priority: 1, stage: p1.game.stage, lastTown: ""}
 		log.Printf("New game: %s - %s\n", p1.Name, p2.Name)
 	}
-}
-
-func botActivator() {
-
 }
