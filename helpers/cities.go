@@ -8,7 +8,7 @@ import (
 
 	"log"
 
-	"../db"
+	"Game/db"
 )
 
 func CityExists(name string) (bool, error) {

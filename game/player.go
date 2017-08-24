@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"../helpers"
+	"Game/helpers"
 )
 
 type Player struct {
@@ -47,18 +47,25 @@ func (player *Player) sendWait() {
 func (player *Player) reader() {
 	io := bufio.NewReader(player.Conn)
 	for {
+		if player.game == nil || player.game.priority == *player.game.stage {
+			player.Conn.Write([]byte("$"))
+		}
 		time.Sleep(100 * time.Millisecond)
 		message, err := io.ReadString('\n')
 		if err != nil {
 			log.Println(err.Error())
-			player.game.chOut <- "exit"
+			if player.game != nil {
+				player.game.chOut <- "exit"
+			}
 			player.offline <- true
 			return
 		}
 		message = strings.Replace(strings.Replace(message, "\n", "", -1), "\r", "", -1)
 
 		if message == "exit" {
-			player.game.chOut <- "exit"
+			if player.game != nil {
+				player.game.chOut <- "exit"
+			}
 			player.offline <- true
 			return
 		} else if message == "" {
@@ -81,7 +88,7 @@ func (player *Player) reader() {
 				player.Conn.Write([]byte(fmt.Sprintf("Think up a city starts with the letter %s.\n", strings.ToUpper(str[len(str)-1:]))))
 				player.Conn.Write(colorWhite)
 			} else {
-				player.inc()
+				player.game.nextMove()
 				player.game.chOut <- town
 			}
 			player.Conn.Write(colorWhite)
@@ -89,8 +96,8 @@ func (player *Player) reader() {
 	}
 }
 
-func (player *Player) inc() {
-	player.game.lock.Lock()
-	defer player.game.lock.Unlock()
-	*player.game.stage = (*player.game.stage + 1) % 2
+func (game *Game) nextMove() {
+	game.lock.Lock()
+	defer game.lock.Unlock()
+	*game.stage = (*game.stage + 1) % 2
 }

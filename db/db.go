@@ -1,7 +1,8 @@
 package db
 
 import (
-	"../config"
+	"Game/config"
+
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
 )
