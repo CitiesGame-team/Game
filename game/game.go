@@ -1,16 +1,15 @@
 package game
 
 import (
-	"Game/config"
-	"Game/helpers"
-	"bufio"
-	"errors"
 	"fmt"
 	"log"
 	"net"
-	"strings"
 	"sync"
 	"time"
+
+	"../config"
+	"../db"
+	"../helpers"
 )
 
 const maxNameLength = 25
@@ -32,43 +31,108 @@ var (
 	colorWhite = []byte("\x1b[37m")
 )
 
+func sendWelcome(conn net.Conn, splash []byte) error {
+	if err := helpers.SendClear(conn); err != nil {
+		return fmt.Errorf("cannot send clear: %s", err)
+	}
+	if err := helpers.SendHome(conn); err != nil {
+		return fmt.Errorf("cannot send home: %s", err)
+	}
+	if err := helpers.SendText(conn, splash); err != nil {
+		return fmt.Errorf("cannot send splash: %s", err)
+	}
+
+	return nil
+}
+
 // Get data of player and return the structure
 func getPlayerData(conn net.Conn, splash []byte) (*Player, error) {
-	_, err := conn.Write(clear)
-	if err != nil {
-		return nil, errors.New("Communication error")
-	}
-	_, err = conn.Write(home)
-	if err != nil {
-		return nil, errors.New("Communication error")
-	}
-	_, err = conn.Write(splash)
-	if err != nil {
-		return nil, errors.New("Communication error")
+	p := &Player{}
+
+	if err := sendWelcome(conn, splash); err != nil {
+		return p, err
 	}
 
-	io := bufio.NewReader(conn)
+NAME:
+	for {
+		err := helpers.SendText(conn, []byte("Enter your name: "))
 
-	line, err := io.ReadString('\n')
-	if err != nil {
-		return nil, errors.New("Communication error")
-	}
-	_, err = conn.Write(down)
-	if err != nil {
+		if err != nil {
+			continue
+		}
 
-	}
-	name := strings.Replace(strings.Replace(line, "\n", "", -1), "\r", "", -1)
-	if name == "" {
-		return nil, errors.New("Empty name")
-	}
-	if len(name) > maxNameLength {
-		return nil, errors.New("Too long name")
-	}
+		name, err := helpers.ReadString(conn)
 
-	log.Printf("New user connected: %s\n", name)
-	off := make(chan bool)
-	game := make(chan string)
-	return &Player{Conn: conn, Name: name, offline: off, gameChanges: game}, nil
+		if err != nil {
+			continue
+		}
+
+		if name == "" {
+			helpers.SendRed(conn, []byte("\nName cannot be empty!\n"))
+			continue
+		}
+
+		if name == "exit" {
+			conn.Close()
+			return p, fmt.Errorf("user decided to exit")
+		}
+
+		if len(name) > maxNameLength {
+			helpers.SendRed(conn, []byte("\nName is too long!\n"))
+			continue
+		}
+
+		userExists := db.UserExists(name)
+
+		if userExists {
+			helpers.SendGreen(conn, []byte(fmt.Sprintf("Welcome back, %s!\n", name)))
+		} else {
+			helpers.SendGreen(conn, []byte(fmt.Sprintf("You are going to register, %s!\n", name)))
+		}
+
+		for {
+			helpers.SendText(conn, []byte("Your password: "))
+
+			pass, err := helpers.ReadString(conn)
+
+			log.Printf("User pass is %q, %s", pass, err)
+
+			if err != nil {
+				continue
+			}
+
+			if pass == "" {
+				continue NAME
+			}
+
+			if userExists {
+				if err = db.UserAuth(name, []byte(pass)); err != nil {
+					helpers.SendRed(conn, []byte(fmt.Sprintf("Wrong password, %s!\n", name)))
+					continue
+				}
+				break
+			} else {
+				created, _, err := db.UserAdd(name, []byte(pass))
+				if err != nil || !created {
+					continue
+				}
+				break
+			}
+		}
+
+		userModel, err := db.UserGet(name)
+
+		if err != nil {
+			continue
+		}
+
+		log.Printf("User connected: %s\n", name)
+
+		off := make(chan bool)
+		game := make(chan string)
+
+		return &Player{Conn: conn, Name: name, offline: off, gameChanges: game, userModel: &userModel}, nil
+	}
 }
 
 func RunGame(conf config.ProjectConfig) {
@@ -89,6 +153,10 @@ func RunGame(conf config.ProjectConfig) {
 		if err != nil {
 			log.Fatalf("error in ln.Accept : %s", err)
 		}
+
+		// all, err := ioutil.ReadAll(conn)
+		// log.Printf("%s", all)
+
 		go handleConnection(conn, splash)
 	}
 }
@@ -118,7 +186,7 @@ func handleConnection(conn net.Conn, splash []byte) {
 				ch1 := make(chan string)
 				ch2 := make(chan string)
 				massege := string(colorGreen) + string(back) +
-					"Your oponent is bot. You starts." + string(colorWhite) + "\n$"
+					"Your opponent is bot. You start." + string(colorWhite) + "\n> "
 				player.Conn.Write([]byte(massege))
 				player.game = &Game{chIn: ch1, chOut: ch2, opponentName: "bot", priority: 0, stage: new(int), lastTown: ""}
 				go bot(&Game{chIn: ch2, chOut: ch1, opponentName: player.Name, priority: 1, stage: player.game.stage, lastTown: ""})
@@ -132,9 +200,9 @@ func handleConnection(conn net.Conn, splash []byte) {
 				if command == "exit" {
 					player.Conn.Write(colorRed)
 					player.Conn.Write(back)
-					player.Conn.Write([]byte(fmt.Sprintf("Your oppnent %s disconnected. You are winner.\nWait for a new opponent.\n", player.game.opponentName)))
+					player.Conn.Write([]byte(fmt.Sprintf("Your opponent %s disconnected. You are winner.\nWaiting for a new opponent...\n", player.game.opponentName)))
 					player.Conn.Write(colorWhite)
-					player.Conn.Write([]byte("$"))
+					player.Conn.Write([]byte("> "))
 					player.game = nil
 					Players[player] = true
 				} else {
@@ -142,19 +210,19 @@ func handleConnection(conn net.Conn, splash []byte) {
 					player.Conn.Write(back)
 					player.Conn.Write([]byte(player.game.opponentName + ": "))
 					player.Conn.Write(colorWhite)
-					player.Conn.Write([]byte(command + "\n$"))
+					player.Conn.Write([]byte(command + "\n> "))
 					player.game.lastTown = command
 				}
 			case <-time.After(timeForMove):
 				if player.game.priority != *player.game.stage {
 					player.Conn.Write(back)
 					player.Conn.Write(colorRed)
-					player.Conn.Write([]byte("You are winner.\n$"))
+					player.Conn.Write([]byte("You are winner.\n> "))
 					player.Conn.Write(colorWhite)
 				} else {
 					player.Conn.Write(back)
 					player.Conn.Write(colorRed)
-					player.Conn.Write([]byte("Time out. You are loser.\n$"))
+					player.Conn.Write([]byte("Time out. You are loser.\n> "))
 					player.Conn.Write(colorWhite)
 				}
 				player.game = nil
@@ -206,15 +274,24 @@ func safetyGameMaker() {
 		ch2 := make(chan string)
 
 		massege := string(colorGreen) +
-			fmt.Sprintf("Your oponent is %s. You starts.", p2.Name) + string(colorWhite) + "\n$"
+			fmt.Sprintf("Your opponent is %s. You start.", p2.Name) + string(colorWhite) + "\n> "
 		p1.gameChanges <- massege
 
 		massege = string(colorGreen) +
-			fmt.Sprintf("Your oponent is %s. %s starts.\n", p1.Name, p1.Name) + string(colorWhite)
+			fmt.Sprintf("Your opponent is %s. %s starts.\n", p1.Name, p1.Name) + string(colorWhite)
 		p2.gameChanges <- massege
 
-		p1.game = &Game{chIn: ch1, chOut: ch2, opponentName: p2.Name, priority: 0, stage: new(int), lastTown: ""}
-		p2.game = &Game{chIn: ch2, chOut: ch1, opponentName: p1.Name, priority: 1, stage: p1.game.stage, lastTown: ""}
-		log.Printf("New game: %s - %s\n", p1.Name, p2.Name)
+		log.Printf("Creating a game in db: %s vs %s", p1.Name, p2.Name)
+		gameId, err := db.GameAdd(*p1.userModel, *p2.userModel, db.GAME_STARTED)
+
+		log.Printf("!!!!!!!!!!!%s, %s", gameId, err)
+		// db.GameGet(gameId)
+
+		/*p1.gameModel = &gameModel
+		p2.gameModel = &gameModel*/
+
+		p1.game = &Game{chIn: ch1, chOut: ch2, opponentName: p2.Name, priority: 0, stage: new(int), lastTown: "" /*, gameModel: &gameModel*/}
+		p2.game = &Game{chIn: ch2, chOut: ch1, opponentName: p1.Name, priority: 1, stage: p1.game.stage, lastTown: "" /*, gameModel: &gameModel*/}
+		log.Printf("New game: %s - %s, gameid=%d\n", p1.Name, p2.Name /*, gameModel.Id*/)
 	}
 }

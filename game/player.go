@@ -10,7 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"Game/helpers"
+	"../db"
+	"../helpers"
 )
 
 type Player struct {
@@ -21,6 +22,9 @@ type Player struct {
 	offline     chan bool
 	gameChanges chan string
 	game        *Game
+
+	userModel *db.UserModel
+	gameModel *db.GameModel
 }
 
 type Game struct {
@@ -31,6 +35,8 @@ type Game struct {
 	lock         sync.Mutex
 	stage        *int
 	lastTown     string
+
+	gameModel *db.GameModel
 }
 
 var Players map[*Player]bool = make(map[*Player]bool)
@@ -48,7 +54,7 @@ func (player *Player) reader() {
 	io := bufio.NewReader(player.Conn)
 	for {
 		if player.game == nil || player.game.priority == *player.game.stage {
-			player.Conn.Write([]byte("$"))
+			player.Conn.Write([]byte("> "))
 		}
 		time.Sleep(100 * time.Millisecond)
 		message, err := io.ReadString('\n')

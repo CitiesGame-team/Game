@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"Game/config"
-	"Game/db"
-	"Game/game"
+	"./config"
+	"./db"
+	"./game"
 
 	"github.com/astaxie/beego/orm"
 )
