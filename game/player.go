@@ -24,7 +24,6 @@ type Player struct {
 	game        *Game
 
 	userModel *db.UserModel
-	gameModel *db.GameModel
 }
 
 type Game struct {
@@ -83,6 +82,14 @@ func (player *Player) reader() {
 			for _, word := range words[1:] {
 				town = town + " " + strings.ToUpper(word[:1]) + strings.ToLower(word[1:])
 			}
+
+			cityModel, err := db.CityGet(town)
+
+			if err == nil && player.game.gameModel.HasCity(cityModel) {
+				helpers.SendRed(player.Conn, []byte(fmt.Sprintf("This city %q is already used in this game. Think of another city!\n", town)))
+				continue
+			}
+
 			exist, _ := helpers.CityExists(town)
 			if !exist {
 				helpers.SendRed(player.Conn, []byte(fmt.Sprintf("Unknown town. Try again.\n")))
@@ -90,10 +97,16 @@ func (player *Player) reader() {
 				helpers.SendRed(player.Conn,
 					[]byte(fmt.Sprintf("Think up a city starts with the letter %s.\n", strings.ToUpper(str[len(str)-1:]))))
 			} else {
+				cityModel, err = db.CityGet(town)
+
+				if err != nil {
+					helpers.SendRed(player.Conn, []byte("Cannot check and save your town. Try again, please!\n"))
+					continue
+				}
+				player.game.gameModel.AddCity(cityModel)
 				player.game.nextMove()
 				player.game.chOut <- town
 			}
-			player.Conn.Write(white)
 		}
 	}
 }
