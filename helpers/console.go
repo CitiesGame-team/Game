@@ -27,6 +27,10 @@ func SendDown(conn net.Conn) error {
 	return SendText(conn, []byte{27, 91, 1, 66})
 }
 
+func SendBack(conn net.Conn) error {
+	return SendText(conn, []byte{27, 91, 1, 68})
+}
+
 func SendUp(conn net.Conn) error {
 	return SendText(conn, []byte{27, 91, 65})
 }

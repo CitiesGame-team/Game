@@ -54,7 +54,7 @@ func (player *Player) reader() {
 	io := bufio.NewReader(player.Conn)
 	for {
 		if player.game == nil || player.game.priority == *player.game.stage {
-			player.Conn.Write([]byte("> "))
+			helpers.SendText(player.Conn, []byte("> "))
 		}
 		time.Sleep(100 * time.Millisecond)
 		message, err := io.ReadString('\n')
@@ -86,13 +86,10 @@ func (player *Player) reader() {
 			}
 			exist, _ := helpers.CityExists(town)
 			if !exist {
-				player.Conn.Write(colorRed)
-				player.Conn.Write([]byte(fmt.Sprintf("Unknown town. Try again.\n")))
-				player.Conn.Write(colorWhite)
+				helpers.SendRed(player.Conn, []byte(fmt.Sprintf("Unknown town. Try again.\n")))
 			} else if str != "" && str[len(str)-1:] != strings.ToLower(town[:1]) {
-				player.Conn.Write(colorRed)
-				player.Conn.Write([]byte(fmt.Sprintf("Think up a city starts with the letter %s.\n", strings.ToUpper(str[len(str)-1:]))))
-				player.Conn.Write(colorWhite)
+				helpers.SendRed(player.Conn,
+					[]byte(fmt.Sprintf("Think up a city starts with the letter %s.\n", strings.ToUpper(str[len(str)-1:]))))
 			} else {
 				player.game.nextMove()
 				player.game.chOut <- town
