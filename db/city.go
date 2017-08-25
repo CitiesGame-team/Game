@@ -5,6 +5,8 @@ import (
 
 	"fmt"
 
+	"math/rand"
+
 	"github.com/astaxie/beego/orm"
 )
 
@@ -48,6 +50,7 @@ func CityHintForGame(letter string, game GameModel) (CityModel, error) {
 	qs := o.QueryTable(new(CityModel))
 	qs.Filter("name__istartswith", letter).Limit(500).All(&cities)
 
+	shuffleCities(cities)
 	for _, city := range cities {
 		if game.HasCity(*city) {
 			continue
@@ -57,4 +60,11 @@ func CityHintForGame(letter string, game GameModel) (CityModel, error) {
 	}
 
 	return CityModel{}, fmt.Errorf("cannot find next city for game with id=%d starting with letter %q!", game.Id, letter)
+}
+
+func shuffleCities(s []*CityModel) {
+	for i := range s {
+		j := rand.Intn(i + 1)
+		s[i], s[j] = s[j], s[i]
+	}
 }
