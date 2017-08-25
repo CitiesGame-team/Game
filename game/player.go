@@ -93,9 +93,9 @@ func (player *Player) reader() {
 			exist, _ := helpers.CityExists(town)
 			if !exist {
 				helpers.SendRed(player.Conn, []byte(fmt.Sprintf("Unknown town. Try again.\n")))
-			} else if str != "" && str[len(str)-1:] != strings.ToLower(town[:1]) {
+			} else if str != "" && strings.ToLower(str[len(str)-1:]) != strings.ToLower(town[:1]) {
 				helpers.SendRed(player.Conn,
-					[]byte(fmt.Sprintf("Think up a city starts with the letter %s.\n", strings.ToUpper(str[len(str)-1:]))))
+					[]byte(fmt.Sprintf("Think up a city starting with the letter %s.\n", strings.ToUpper(str[len(str)-1:]))))
 			} else {
 				cityModel, err = db.CityGet(town)
 
@@ -104,7 +104,6 @@ func (player *Player) reader() {
 					continue
 				}
 				player.game.gameModel.AddCity(cityModel)
-				player.game.lastTown = town
 				player.game.nextMove()
 				player.game.chOut <- town
 			}
