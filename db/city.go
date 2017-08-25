@@ -3,6 +3,8 @@ package db
 import (
 	"time"
 
+	"fmt"
+
 	"github.com/astaxie/beego/orm"
 )
 
@@ -37,4 +39,22 @@ func CityAdd(name string) (bool, error) {
 
 	created, _, err := o.ReadOrCreate(&city, "Name")
 	return created, err
+}
+
+func CityHintForGame(letter string, game GameModel) (CityModel, error) {
+	var cities []*CityModel
+	o := orm.NewOrm()
+
+	qs := o.QueryTable(new(CityModel))
+	qs.Filter("name__istartswith", letter).Limit(500).All(&cities)
+	
+	for _, city := range cities {
+		if game.HasCity(*city) {
+			continue
+		}
+
+		return *city, nil
+	}
+
+	return CityModel{}, fmt.Errorf("cannot find next city for game with id=%d starting with letter %q!", game.Id, letter)
 }

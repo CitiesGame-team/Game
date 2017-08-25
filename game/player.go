@@ -104,6 +104,7 @@ func (player *Player) reader() {
 					continue
 				}
 				player.game.gameModel.AddCity(cityModel)
+				player.game.lastTown = town
 				player.game.nextMove()
 				player.game.chOut <- town
 			}
