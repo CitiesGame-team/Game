@@ -29,9 +29,25 @@ func main() {
 	}
 
 	if *isInit {
-		err = orm.RunSyncdb(connName, true, true)
+		err = orm.RunSyncdb(connName, false, true)
 		if err != nil {
-			log.Printf("%s", err)
+			log.Printf("orm sync error: %s", err)
+			return
+		}
+
+		cities, err := config.ReadCitiesBase(conf.CitiesBaseFile)
+
+		if err != nil {
+			log.Printf("cities base init error: %s", err)
+			return
+		}
+
+		total := len(cities.Cities)
+		for index, city := range cities.Cities {
+			db.CityAdd(city)
+			if (index+1)%500 == 0 || (total-index-1) == 0 {
+				log.Printf("%d cities of %d", index+1, total)
+			}
 		}
 	} else {
 		game.RunGame(conf)

@@ -1,5 +1,6 @@
 name: cities game
 splash_file: ./splash.txt
+cities_base_file: ./cities_base.yml
 
 db:
   conn_string: user:password@/cities

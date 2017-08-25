@@ -47,7 +47,7 @@ func CityHintForGame(letter string, game GameModel) (CityModel, error) {
 
 	qs := o.QueryTable(new(CityModel))
 	qs.Filter("name__istartswith", letter).Limit(500).All(&cities)
-	
+
 	for _, city := range cities {
 		if game.HasCity(*city) {
 			continue

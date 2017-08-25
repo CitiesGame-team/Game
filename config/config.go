@@ -21,10 +21,11 @@ type ServerConfig struct {
 }
 
 type ProjectConfig struct {
-	Name       string          `yaml:"name"`
-	SplashFile string          `yaml:"splash_file"`
-	Db         *DatabaseConfig `yaml:"db"`
-	Server     *ServerConfig   `yaml:"server"`
+	Name           string          `yaml:"name"`
+	SplashFile     string          `yaml:"splash_file"`
+	CitiesBaseFile string          `yaml:"cities_base_file"`
+	Db             *DatabaseConfig `yaml:"db"`
+	Server         *ServerConfig   `yaml:"server"`
 }
 
 func ReadYAML(fName string, dest interface{}) error {
@@ -47,6 +48,21 @@ func ReadYAML(fName string, dest interface{}) error {
 
 func ReadProjectConfig(fName string) (ProjectConfig, error) {
 	var dest ProjectConfig
+
+	err := ReadYAML(fName, &dest)
+	if err != nil {
+		return dest, err
+	}
+
+	return dest, nil
+}
+
+type CitiesCollection struct {
+	Cities []string `yaml:"cities"`
+}
+
+func ReadCitiesBase(fName string) (CitiesCollection, error) {
+	var dest CitiesCollection
 
 	err := ReadYAML(fName, &dest)
 	if err != nil {
