@@ -14,13 +14,14 @@ func bot(game *Game) {
 				log.Printf("%s's bot closed.\n", game.opponentName)
 				return
 			} else {
+				//TODO
 				town := "Yaroslavl"
 				game.lastTown = town
 				game.chOut <- town
 				game.nextMove()
 			}
 		case <-time.After(timeForMove):
-			//
+			return
 		}
 	}
 }

@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"../db"
-	"../helpers"
+	"Game/db"
+	"Game/helpers"
 )
 
 type Player struct {
@@ -42,10 +42,10 @@ type Game struct {
 var Players map[*Player]bool = make(map[*Player]bool)
 
 func (player *Player) sendWait() {
+	helpers.SendDown(player.Conn)
 	for _, r := range `|/-\` {
-		player.Conn.Write(up)
-		player.Conn.Write(up)
-		player.Conn.Write([]byte(fmt.Sprintf("\nWaiting for opponent %c\n", r)))
+		helpers.SendUp(player.Conn)
+		player.Conn.Write([]byte(fmt.Sprintf("Waiting for opponent %c\n", r)))
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -53,10 +53,9 @@ func (player *Player) sendWait() {
 func (player *Player) reader() {
 	io := bufio.NewReader(player.Conn)
 	for {
-		if player.game == nil || player.game.priority == *player.game.stage {
+		if player.game != nil && player.game.priority == *player.game.stage {
 			helpers.SendText(player.Conn, []byte("> "))
 		}
-		time.Sleep(100 * time.Millisecond)
 		message, err := io.ReadString('\n')
 		if err != nil {
 			log.Println(err.Error())
@@ -94,7 +93,7 @@ func (player *Player) reader() {
 				player.game.nextMove()
 				player.game.chOut <- town
 			}
-			player.Conn.Write(colorWhite)
+			player.Conn.Write(white)
 		}
 	}
 }

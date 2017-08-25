@@ -7,9 +7,16 @@ import (
 	"sync"
 	"time"
 
-	"../config"
-	"../db"
-	"../helpers"
+	"Game/config"
+	"Game/db"
+	"Game/helpers"
+)
+
+var (
+	back  = []byte{27, 91, 1, 68}
+	red   = []byte("\x1b[33m")
+	green = []byte("\x1b[32m")
+	white = []byte("\x1b[37m")
 )
 
 const maxNameLength = 25
@@ -17,19 +24,6 @@ const timeForMove = time.Minute
 const timeToWaitOpponent = time.Second * 10
 
 var Mutex *sync.Mutex = &sync.Mutex{}
-
-//To format the users output
-// http://www.isthe.com/chongo/tech/comp/ansi_escapes.html
-var (
-	home       = []byte{27, 91, 72}
-	clear      = []byte{27, 91, 50, 74}
-	down       = []byte{27, 91, 1, 66}
-	up         = []byte{27, 91, 65}
-	back       = []byte{27, 91, 1, 68}
-	colorRed   = []byte("\x1b[33m")
-	colorGreen = []byte("\x1b[32m")
-	colorWhite = []byte("\x1b[37m")
-)
 
 func sendWelcome(conn net.Conn, splash []byte) error {
 	if err := helpers.SendClear(conn); err != nil {
@@ -73,7 +67,8 @@ NAME:
 		}
 
 		if name == "exit" {
-			conn.Close()
+			//it will be closed by defer
+			//conn.Close()
 			return p, fmt.Errorf("user decided to exit")
 		}
 
@@ -100,7 +95,7 @@ NAME:
 			if err != nil {
 				continue
 			}
-
+			//?????????
 			if pass == "" {
 				continue NAME
 			}
@@ -154,9 +149,6 @@ func RunGame(conf config.ProjectConfig) {
 			log.Fatalf("error in ln.Accept : %s", err)
 		}
 
-		// all, err := ioutil.ReadAll(conn)
-		// log.Printf("%s", all)
-
 		go handleConnection(conn, splash)
 	}
 }
@@ -166,7 +158,10 @@ func handleConnection(conn net.Conn, splash []byte) {
 	player, err := getPlayerData(conn, splash)
 	if err != nil {
 		log.Printf("Couldn't log in: %s\n", err.Error())
+		return
 	}
+	helpers.SendGreen(player.Conn, []byte("Wait for a new opponent...\n"))
+
 	addPlayer(player)
 	go player.reader()
 
@@ -183,11 +178,12 @@ func handleConnection(conn net.Conn, splash []byte) {
 				helpers.SendText(player.Conn, []byte(massege))
 			case <-time.After(timeToWaitOpponent):
 				log.Printf("User %s starts game with bot", player.Name)
+				removePlayer(player)
 				ch1 := make(chan string)
 				ch2 := make(chan string)
-				massege := string(colorGreen) + string(back) +
-					"Your opponent is bot. You start." + string(colorWhite) + "\n> "
-				helpers.SendText(player.Conn, []byte(massege))
+				helpers.SendBack(player.Conn)
+				helpers.SendGreen(player.Conn, []byte("Your opponent is bot. You start.\n"))
+				helpers.SendText(player.Conn, []byte("> "))
 				player.game = &Game{chIn: ch1, chOut: ch2, opponentName: "bot", priority: 0, stage: new(int), lastTown: ""}
 				go bot(&Game{chIn: ch2, chOut: ch1, opponentName: player.Name, priority: 1, stage: player.game.stage, lastTown: ""})
 			}
@@ -198,8 +194,11 @@ func handleConnection(conn net.Conn, splash []byte) {
 				return
 			case command := <-player.game.chIn:
 				if command == "exit" {
-					helpers.SendRed(player.Conn, []byte(fmt.Sprintf("Your opponent %s disconnected. You are winner.\nWaiting for a new opponent...\n", player.game.opponentName)))
-					helpers.SendText(player.Conn, []byte("> "))
+					helpers.SendBack(player.Conn)
+					helpers.SendBack(player.Conn)
+					helpers.SendRed(player.Conn, []byte(fmt.Sprintf("Your opponent %s disconnected. You are winner.\n", player.game.opponentName)))
+					helpers.SendGreen(player.Conn, []byte("Wait for a new opponent...\n"))
+					//helpers.SendText(player.Conn, []byte("> "))
 					player.game = nil
 					Players[player] = true
 				} else {
@@ -210,10 +209,13 @@ func handleConnection(conn net.Conn, splash []byte) {
 				}
 			case <-time.After(timeForMove):
 				helpers.SendBack(player.Conn)
+				helpers.SendBack(player.Conn)
 				if player.game.priority != *player.game.stage {
-					helpers.SendRed(player.Conn, []byte("You are winner.\n> "))
+					helpers.SendRed(player.Conn, []byte("You are winner.\n"))
+					helpers.SendGreen(player.Conn, []byte("Wait for a new opponent...\n"))
 				} else {
-					helpers.SendRed(player.Conn, []byte("Time out. You are loser.\n> "))
+					helpers.SendRed(player.Conn, []byte("Time out. You are loser.\n"))
+					helpers.SendGreen(player.Conn, []byte("Wait for a new opponent...\n"))
 				}
 				player.game = nil
 				addPlayer(player)
@@ -263,12 +265,12 @@ func safetyGameMaker() {
 		ch1 := make(chan string)
 		ch2 := make(chan string)
 
-		massege := string(colorGreen) +
-			fmt.Sprintf("Your opponent is %s. You start.", p2.Name) + string(colorWhite) + "\n> "
+		massege := string(green) + string(back) + string(back) +
+			fmt.Sprintf("Your opponent is %s. You start.", p2.Name) + string(white) + "\n> "
 		p1.gameChanges <- massege
 
-		massege = string(colorGreen) +
-			fmt.Sprintf("Your opponent is %s. %s starts.\n", p1.Name, p1.Name) + string(colorWhite)
+		massege = string(green) + string(back) + string(back) +
+			fmt.Sprintf("Your opponent is %s. %s starts.\n", p1.Name, p1.Name) + string(white)
 		p2.gameChanges <- massege
 
 		p1.game = &Game{chIn: ch1, chOut: ch2, opponentName: p2.Name, priority: 0, stage: new(int), lastTown: ""}
