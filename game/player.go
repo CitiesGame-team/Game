@@ -90,8 +90,8 @@ func (player *Player) reader() {
 				continue
 			}
 
-			exist, _ := helpers.CityExists(town)
-			if !exist {
+			exist, err := helpers.CityExists(town)
+			if !exist || err != nil {
 				helpers.SendRed(player.Conn, []byte(fmt.Sprintf("Unknown town. Try again.\n")))
 			} else if str != "" && strings.ToLower(str[len(str)-1:]) != strings.ToLower(town[:1]) {
 				helpers.SendRed(player.Conn,
