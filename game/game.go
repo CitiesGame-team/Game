@@ -125,6 +125,8 @@ NAME:
 
 		log.Printf("User connected: %s\n", name)
 
+		sendWelcome(conn, splash)
+
 		off := make(chan bool)
 		game := make(chan string)
 
