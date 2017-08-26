@@ -64,7 +64,7 @@ func (player *Player) reader() {
 			player.offline <- true
 			return
 		}
-		message = strings.Replace(strings.Replace(message, "\n", "", -1), "\r", "", -1)
+		message = strings.Replace(strings.Replace(strings.Replace(message, "\n", "", -1), "\r", "", -1), "\b", "", -1)
 
 		if message == "exit" {
 			if player.game != nil {
