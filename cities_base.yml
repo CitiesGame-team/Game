@@ -1,44 +1,79 @@
 cities:
   - Abakan
+  - Abidjan
+  - Abilene
+  - Abu Dhabi
   - Acapulco
   - Achinsk
+  - Addis Ababa
+  - Agra
   - Agua Prieta
+  - Ahmedabad
   - Ahuachapan
+  - Akron
   - Aktau
   - Aktobe
   - Akulivik
   - Albany
   - Albuquerque
   - Alchevsk
+  - Aleksin
   - Alexandria
+  - Alexandrov
   - Allentown
   - Almaty
   - Almetyevsk
   - Altoona
   - Amarillo
+  - Amman
+  - Amsterdam
+  - Anaheim
+  - Anapa
+  - Anchorage
   - Angarsk
+  - Ankara
   - Ann Arbor
   - Annapolis
+  - Antalya
+  - Antioch
+  - Anzhero-Sudzhensk
+  - Apatity
   - Arctic Bay
   - Arkhangelsk
+  - Arlington
   - Armavir
+  - Arsenyev
+  - Artyom
+  - Arvada
   - Arviat
   - Arzamas
+  - Asbest
   - Asheville
   - Astana
   - Astrakhan
+  - Athens
   - Atlanta
   - Atlantic City
   - Atyrau
+  - Auckland
   - Augusta
   - Aupaluk
+  - Aurora
   - Austin
+  - Azov
+  - Baghdad
   - Baicheng
   - Baker Lake
   - Bakersfield
+  - Baku
+  - Balakhna
   - Balakovo
   - Balashikha
+  - Balashov
+  - Baltimore
+  - Bangkok
   - Bangor
+  - Barcelona
   - Barnaul
   - Barrie
   - Barrow
@@ -46,166 +81,341 @@ cities:
   - Bathurst
   - Baton Rouge
   - Batumi
+  - Beaumont
+  - Beijing
+  - Belebey
   - Belgorod
   - Belleville
+  - Bellevue
+  - Belogorsk
+  - Belorechensk
+  - Beloretsk
+  - Belovo
   - Bend
+  - Bengaluru
   - Berdiansk
   - Berdsk
   - Berezniki
+  - Berkeley
+  - Berlin
+  - Beryozovsky
   - Billings
   - Biloxi
+  - Birmingham
+  - Birobidzhan
   - Bishkek
   - Bismarck
   - Biysk
+  - Blagoveshchensk
   - Bloomington
   - Bluefields
+  - Bogotá
   - Boise
+  - Bor
+  - Borisoglebsk
+  - Borovichi
   - Boston
+  - Boulder
   - Brandon
   - Bratsk
   - Bridgeport
   - Bridgetown
   - Brockville
+  - Broken Arrow
   - Brovary
+  - Brownsville
+  - Brussels
   - Bryansk
+  - Bucharest
+  - Budapest
+  - Budyonnovsk
+  - Buenos Aires
   - Buffalo
+  - Bugulma
+  - Burbank
+  - Burgas
   - Burlington
+  - Busan
+  - Buynaksk
+  - Buzuluk
   - Cabo San Lucas
+  - Cairo
   - Calgary
+  - Cambridge
   - Cambridge Bay
   - Campbell River
   - Campeche
   - Camrose
+  - Cancun
   - Canton
+  - Cape Coral
   - Cape Dorset
+  - Cape Town
+  - Carlsbad
+  - Carrollton
   - Carson City
+  - Cary
+  - Casablanca
   - Cedar Rapids
+  - Centennial
+  - Chandler
+  - Changsha
+  - Chapayevsk
   - Charleston
   - Charlotte
   - Charlottetown
   - Chattanooga
+  - Chaykovsky
   - Cheboksary
+  - Chekhov
   - Chelyabinsk
+  - Chengdu
+  - Chennai
+  - Cheremkhovo
   - Cherepovets
   - Cherkasy
   - Cherkessk
   - Chernihiv
+  - Chernogorsk
+  - Chesapeake
   - Chesterfield Inlet
   - Chetumal
   - Cheyenne
+  - Chiang Mai
+  - Chicago
   - Chico
   - Chihuahua
   - Chilpancingo
+  - Chistopol
   - Chita
+  - Chongqing
+  - Christchurch
+  - Chula Vista
+  - Cincinnati
   - Ciudad Victoria
+  - Clarksville
+  - Clearwater
+  - Cleveland
+  - Clinton
+  - Clovis
   - Clyde River
   - Cody
   - Colima
+  - College Station
+  - Colorado Springs
   - Columbia
   - Columbus
   - Concord
   - Coral Harbour
+  - Coral Springs
   - Corner Brook
   - Cornwall
+  - Corona
   - Corpus Christi
+  - Costa Mesa
   - Cranbrook
   - Cuernavaca
+  - Dallas
+  - Daly City
+  - Dar es Salaam
   - Dashoguz
   - Dauphin
+  - Davenport
+  - Davie
   - Dawson Creek
+  - Dayton
   - Daytona Beach
+  - Delhi
+  - Denpasar
+  - Denton
   - Denver
   - Derbent
   - Des Moines
+  - Detroit
+  - Dhaka
   - Dimitrovgrad
+  - Djerba
+  - Dmitrov
   - Dnipro
+  - Doha
   - Dolgoprudny
   - Domodedovo
   - Donetsk
+  - Dongguan
+  - Donskoy
   - Dover
+  - Downey
   - Drummondville
   - Dryden
+  - Dubai
+  - Dublin
+  - Dubna
   - Durango
+  - Durban
   - Durham
   - Dzerzhinsk
+  - East Province
+  - Edirne
+  - Edison
   - Edmonton
   - Edmundston
   - Ekibastuz
+  - Ekurhuleni
+  - El Cajon
+  - El Monte
   - El Paso
   - Elektrostal
+  - Elgin
   - Elista
+  - Elizabeth
+  - Elk Grove
   - Engels
   - Ensenada
   - Erie
+  - Escondido
   - Esteli
   - Eugene
   - Eureka
   - Evansville
+  - Everett
+  - Fairfield
+  - Faisalabad
+  - Fargo
   - Farmington
   - Fayetteville
   - Flagstaff
   - Flin Flon
   - Flint
+  - Florence
   - Florida
+  - Fontana
+  - Fort Collins
   - Fort Lauderdale
   - Fort McMurray
   - Fort Myers
+  - Fort Wayne
+  - Fort Worth
+  - Foshan
   - Frankfort
+  - Frankfurt
   - Fredericton
   - Freeport
+  - Fremont
+  - Fresno
+  - Frisco
+  - Fryazino
+  - Fullerton
   - Gainesville
+  - Garden Grove
+  - Garland
+  - Gatchina
+  - Gelendzhik
+  - Georgiyevsk
+  - Gilbert
+  - Giza
   - Glazov
+  - Glendale
   - Gori
+  - Gorno-Altaysk
   - Grand Forks
   - Grand Junction
+  - Grand Prairie
+  - Grand Rapids
   - Grande Prairie
   - Great Falls
+  - Greeley
+  - Green Bay
   - Greensboro
   - Greenville
+  - Gresham
   - Grozny
   - Guadalajara
   - Guanajuato
+  - Guangzhou
   - Guatemala City
   - Guaymas
+  - Gubkin
+  - Guilin
+  - Gukovo
+  - Gus-Khrustalny
   - Hagerstown
   - Halifax
   - Hall Beach
   - Hamilton
+  - Hampton
+  - Hangzhou
+  - Hanoi
+  - Harare
+  - Harbin
   - Harrisburg
   - Hartford
   - Havana
+  - Hayward
+  - Hefei
   - Helena
+  - Henderson
   - Hermosillo
+  - Hialeah
+  - High Point
+  - Hillsboro
   - Hinche
+  - Ho Chi Minh City
+  - Hollywood
   - Homel
+  - Hong Kong
+  - Honolulu
   - Hopedale
   - Horlivka
+  - Houston
+  - Huntington Beach
   - Huntsville
+  - Hyderabad
   - Igloolik
   - Independence
   - Indianapolis
+  - Inglewood
   - Inukjuak
   - Iqaluit
   - Irkutsk
+  - Irvine
+  - Irving
+  - Ishim
+  - Ishimbay
+  - Iskitim
+  - Istanbul
   - Ivanovo
+  - Ivanteyevka
   - Ivujivik
+  - Izberbash
   - Izhevsk
   - Jackson
   - Jacksonville
+  - Jaipur
+  - Jakarta
+  - Jeddah
   - Jefferson City
+  - Jersey City
   - Jinotega
   - Jinotepe
+  - Johannesburg
   - Joliet
   - Juneau
+  - Jurupa Valley
+  - Kabul
   - Kalamazoo
+  - Kaliningrad
   - Kaluga
+  - Kamensk-Shakhtinsky
+  - Kamensk-Uralsky
   - Kamianske
   - Kamloops
   - Kamyshin
   - Kangiqsualujjuaq
   - Kangiqsujuaq
   - Kangirsuk
+  - Kansas City
   - Kansk
+  - Karachi
   - Karaganda
   - Karakol
   - Kaspiysk
@@ -213,87 +423,167 @@ cities:
   - Kelowna
   - Kemerovo
   - Kenora
+  - Kent
   - Kerch
   - Ketchikan
   - Key West
+  - Khabarovsk
   - Khachmaz
+  - Khanty-Mansiysk
   - Kharkiv
   - Khasavyurt
   - Kherson
   - Khimki
+  - Kiev
+  - Killeen
   - Kimmirut
+  - Kineshma
   - Kingston
+  - Kinshasa
+  - Kirishi
   - Kirov
+  - Kirovo-Chepetsk
   - Kiselyovsk
   - Kislovodsk
   - Kissimmee
   - Kitchener
+  - Klimovsk
+  - Klin
+  - Klintsy
   - Knoxville
+  - Kogalym
   - Kokshetau
+  - Kolkata
   - Kolomna
   - Kolpino
+  - Komsomolsk-on-Amur
   - Kopeysk
   - Korolyov
   - Kostanay
   - Kostroma
+  - Kotlas
   - Kovrov
   - Kramatorsk
   - Krasnodar
   - Krasnogorsk
+  - Krasnokamensk
+  - Krasnokamsk
+  - Krasnoturyinsk
   - Krasnoyarsk
   - Kremenchuk
+  - Kropotkin
   - Kropyvnytskyi
+  - Krymsk
   - Kryvyi Rih
+  - Kstovo
+  - Kuala Lumpur
   - Kugaaruk
   - Kugluktuk
+  - Kumertau
+  - Kungur
   - Kurgan
   - Kursk
   - Kutaisi
   - Kuujjuaq
+  - Kuznetsk
   - Kyzyl
   - Kyzylorda
   - La Ceiba
   - La Paz
   - La Romana
+  - Labinsk
+  - Lafayette
+  - Lagos
+  - Lahore
+  - Lakeland
+  - Lakewood
   - Lancaster
   - Lansing
   - Laredo
+  - Las Cruces
+  - Las Vegas
   - Lawrence
+  - League City
+  - Leninogorsk
+  - Leninsk-Kuznetsky
   - Les Cayes
+  - Lesnoy
+  - Lesosibirsk
   - Lethbridge
+  - Lewisville
+  - Lexington
+  - Lima
   - Lincoln
   - Lipetsk
+  - Lisbon
+  - Liski
   - Little Rock
+  - Livny
+  - Lobnya
   - London
+  - Long Beach
   - Los Alamos
+  - Los Angeles
   - Los Mochis
+  - Louisville
+  - Lowell
   - Lubbock
   - Luhansk
   - Lynchburg
+  - Lysva
   - Lysychansk
+  - Lytkarino
   - Lyubertsy
+  - Macau
   - Macon
   - Madison
+  - Madrid
+  - Magadan
   - Magnitogorsk
   - Makhachkala
   - Makiivka
   - Makkovik
+  - Manama
+  - Manchester
+  - Manila
   - Mariupol
   - Marquette
+  - Marrakech
   - Masaya
   - Matamoros
   - Maykop
+  - McAllen
+  - McKinney
+  - Mecca
   - Medford
   - Medicine Hat
   - Melbourne
+  - Meleuz
   - Melitopol
+  - Memphis
+  - Mesa
+  - Mesquite
   - Mexicali
+  - Mexico
   - Mexico City
   - Mezhdurechensk
+  - Miami
   - Miami Beach
+  - Miami Gardens
   - Miass
+  - Michurinsk
+  - Midland
+  - Mikhaylovka
+  - Mikhaylovsk
+  - Milan
+  - Milwaukee
+  - Mineralnye Vody
+  - Minneapolis
+  - Minusinsk
+  - Miramar
   - Missoula
   - Mobile
+  - Modesto
   - Moncton
   - Monterey
   - Montgomery
@@ -301,34 +591,60 @@ cities:
   - Montreal
   - Moose Jaw
   - Morelia
+  - Moreno Valley
   - Moscow
+  - Mugla
+  - Mumbai
+  - Munich
+  - Murfreesboro
   - Murmansk
   - Murom
+  - Murrieta
   - Mytishchi
   - Naberezhnye Chelny
   - Nain
+  - Nairobi
+  - Nakhodka
   - Nalchik
   - Nanaimo
+  - Nanjing
+  - Naperville
   - Naples
+  - Naro-Fominsk
   - Naryn
   - Nashville
   - Navojoa
+  - Nazarovo
   - Nazran
   - Neftekamsk
   - Nefteyugansk
+  - Neryungri
   - Nevinnomyssk
   - New Haven
+  - New Orleans
+  - New Taipei City
   - New York
+  - New York City
+  - Newark
   - Newport
+  - Newport News
   - Niagara Falls
+  - Nice
   - Nikopol
+  - Ningbo
   - Nizhnekamsk
   - Nizhnevartovsk
   - Nizhny Novgorod
   - Nizhny Tagil
   - Noginsk
+  - Norfolk
   - Norilsk
+  - Norman
   - North Battleford
+  - North Charleston
+  - North Las Vegas
+  - Norwalk
+  - Novoaltaysk
   - Novocheboksarsk
   - Novocherkassk
   - Novokuybyshevsk
@@ -337,146 +653,258 @@ cities:
   - Novorossiysk
   - Novoshakhtinsk
   - Novosibirsk
+  - Novotroitsk
+  - Novouralsk
   - Novy Urengoy
   - Noyabrsk
   - Nuevo Laredo
   - Nukus
+  - Nyagan
   - Oakland
   - Oaxaca
   - Obninsk
   - Ocala
+  - Oceanside
   - Odessa
   - Odintsovo
   - Oklahoma City
+  - Oktyabrsky
+  - Olathe
   - Olympia
+  - Omaha
   - Omsk
+  - Ontario
   - Oral
+  - Orange
+  - Orekhovo-Zuyevo
   - Orenburg
   - Orillia
   - Orlando
   - Orsk
   - Oryol
   - Ottawa
+  - Overland Park
+  - Oxnard
+  - Ozyorsk
+  - Palm Bay
   - Palm Coast
+  - Palmdale
   - Palo Alto
   - Pangnirtung
+  - Paris
   - Pasadena
+  - Paterson
+  - Pattaya
   - Pavlodar
   - Pavlohrad
+  - Pavlovo
+  - Pavlovsky Posad
+  - Pearland
+  - Pembroke Pines
   - Pensacola
   - Penza
+  - Peoria
   - Perm
   - Pervouralsk
+  - Peshawar
   - Peterborough
   - Petropavlovsk
+  - Petropavlovsk-Kamchatsky
   - Petrozavodsk
+  - Philadelphia
   - Phoenix
+  - Phuket
   - Pierre
   - Pinar del Rio
+  - Pittsburgh
+  - Plano
   - Plattsburgh
   - Pocatello
   - Podolsk
+  - Polevskoy
   - Poltava
+  - Pomona
+  - Pompano Beach
   - Pond Inlet
+  - Port St. Lucie
   - Portland
   - Postville
   - Poti
   - Poughkeepsie
+  - Prague
   - Prescott
   - Prince Albert
   - Prince George
+  - Prokhladny
   - Prokopyevsk
   - Providence
   - Provo
+  - Pskov
   - Puebla
   - Pueblo
+  - Pune
+  - Punta Cana
   - Pushkino
   - Puvirnituq
   - Pyatigorsk
+  - Pyongyang
+  - Quanzhou
   - Quaqtaq
   - Quebec
   - Raleigh
   - Ramenskoye
+  - Rancho Cucamonga
   - Rankin Inlet
+  - Rawalpindi
   - Red Deer
   - Regina
   - Reno
+  - Renton
   - Resolute
+  - Reutov
+  - Revda
+  - Rialto
+  - Richardson
   - Richmond
   - Rigolet
   - Rimouski
+  - Rio de Janeiro
+  - Riverside
+  - Riyadh
   - Roanoke
   - Rochester
+  - Rockford
+  - Rome
   - Roseau
+  - Roseville
+  - Roslavl
+  - Rossosh
+  - Rostov-on-Don
+  - Round Rock
   - Rubtsovsk
   - Rudniy
   - Rustavi
   - Ryazan
   - Rybinsk
+  - Rzhev
+  - Sacramento
   - Saint John
   - Saint Paul
   - Saint Petersburg
   - Salavat
   - Salem
+  - Salinas
   - Salluit
+  - Salsk
   - Salt Lake City
   - Saltillo
   - Samara
+  - San Angelo
+  - San Antonio
   - San Bernardino
+  - San Diego
   - San Felipe
+  - San Francisco
+  - San Jose
   - San Luis Potosi
+  - San Mateo
+  - San Paulo
   - Sancti Spiritus
+  - Sandy Springs
+  - Santa Ana
   - Santa Barbara
+  - Santa Clara
+  - Santa Clarita
   - Santa Cruz
   - Santa Fe
+  - Santa Maria
+  - Santa Rosa
+  - Santiago
   - Santiago de Cuba
   - Santiago de los Caballeros
   - Saransk
   - Sarapul
   - Sarasota
   - Saratov
+  - Sarov
   - Saskatoon
   - Savannah
   - Schenectady
+  - Scottsdale
+  - Seattle
   - Semipalatinsk
   - Sensuntepeque
+  - Seoul
   - Sergiyev Posad
   - Serov
   - Serpukhov
   - Sevastopol
   - Severodvinsk
+  - Severomorsk
   - Seversk
+  - Shadrinsk
   - Shakhty
+  - Shanghai
+  - Shantou
+  - Sharm el-Sheikh
+  - Shchyokino
   - Shchyolkovo
+  - Shenyang
+  - Shenzhen
   - Sherbrooke
   - Shreveport
   - Shuanghe
+  - Shuya
   - Shymkent
+  - Sibay
+  - Siem Reap
   - Sievierodonetsk
   - Simferopol
+  - Simi Valley
+  - Singapore
   - Sioux Falls
   - Sitka
+  - Slavyansk-na-Kubani
   - Sloviansk
   - Smolensk
   - Sochi
+  - Sofia
   - Solikamsk
+  - Solnechnogorsk
+  - Sosnovy Bor
+  - Sousse
+  - South Bend
   - Spartanburg
   - Spokane
   - Springfield
+  - St Petersburg
+  - St. Louis
+  - St. Petersburg
+  - Stamford
   - Stary Oskol
   - Stavropol
   - Steinbach
+  - Sterling Heights
   - Sterlitamak
+  - Stockton
+  - Stupino
   - Sukhum
   - Sumy
+  - Sunnyvale
+  - Surat
   - Surgut
+  - Surprise
+  - Suzhou
+  - Svobodny
   - Swift Current
   - Sydney
   - Syktyvkar
   - Syracuse
   - Syzran
+  - São Paulo
   - Tacoma
   - Taganrog
+  - Taipei City
   - Taldykorgan
   - Tallahassee
   - Tambov
@@ -485,75 +913,154 @@ cities:
   - Taraz
   - Tasiujaq
   - Tbilisi
+  - Tehran
   - Telavi
+  - Temecula
+  - Tempe
   - Tepic
   - Thompson
+  - Thornton
+  - Thousand Oaks
   - Thunder Bay
+  - Tianjin
+  - Tikhoretsk
+  - Tikhvin
+  - Timashyovsk
   - Timmins
   - Tlaxcala
   - Tobolsk
+  - Tokyo
+  - Toledo
   - Tolleson
   - Toluca
   - Tolyatti
   - Tomsk
   - Topeka
   - Toronto
+  - Torrance
   - Trenton
+  - Troitsk
   - Tskhinval
+  - Tuapse
   - Tucson
   - Tula
   - Tulsa
   - Turkestan
   - Tuscaloosa
+  - Tuymazy
   - Tver
+  - Tyler
   - Tyumen
   - Ufa
+  - Ukhta
+  - Ulan-Ude
   - Ulyanovsk
   - Umiujaq
   - Urgench
+  - Usolye-Sibirskoye
+  - Ussuriysk
+  - Ust-Ilimsk
   - Utica
   - Uzlovaya
+  - Vallejo
   - Vancouver
+  - Velikiye Luki
   - Veliky Novgorod
+  - Venice
+  - Ventura
   - Veracruz
+  - Verkhnyaya Pyshma
   - Victoria
+  - Victorville
+  - Vidnoye
+  - Vienna
   - Villahermosa
+  - Virginia Beach
+  - Visalia
+  - Vista
   - Vladikavkaz
   - Vladimir
+  - Vladivostok
   - Volgodonsk
   - Volgograd
   - Vologda
+  - Volsk
+  - Volzhsk
   - Volzhskiy
+  - Volzhsky
   - Vorkuta
   - Voronezh
   - Voskresensk
   - Votkinsk
+  - Vsevolozhsk
+  - Vyazma
+  - Vyborg
+  - Vyksa
+  - Vyshny Volochyok
+  - Waco
+  - Warren
+  - Warsaw
+  - Washington
+  - Washington DC
+  - Waterbury
   - Wausau
   - Wenatchee
+  - Wenzhou
+  - West Covina
+  - West Jordan
+  - West Palm Beach
+  - West Valley City
+  - Westminster
   - Wetaskiwin
   - Whitehorse
+  - Wichita
+  - Wichita Falls
   - Willemstad
   - Williams Lake
   - Wilmington
   - Winnipeg
+  - Winston–Salem
   - Winter Haven
   - Wiwili de Jinotega
+  - Woodbridge
   - Worcester
+  - Wuhan
   - Xalapa
+  - Xi'an
+  - Xiamen
   - Yakutsk
+  - Yangon
   - Yaroslavl
+  - Yegoryevsk
   - Yekaterinburg
+  - Yelabuga
   - Yelets
   - Yellowknife
   - Yessentuki
   - Yevpatoriya
+  - Yeysk
+  - Yokohama
+  - Yonkers
   - Yorkton
+  - Yoshkar-Ola
   - Yuba City
   - Yuma
+  - Yurga
+  - Yuzhno-Sakhalinsk
   - Zacatecas
   - Zaporizhzhia
+  - Zarechny
+  - Zelenodolsk
+  - Zelenogorsk
   - Zelenograd
+  - Zheleznodorozhny
+  - Zheleznogorsk
+  - Zhengzhou
   - Zhezkazgan
+  - Zhigulyovsk
+  - Zhongshan
+  - Zhuhai
   - Zhukovsky
   - Zlatoust
   - Zugdidi
+  - Zunyi
