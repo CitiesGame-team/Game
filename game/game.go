@@ -126,6 +126,7 @@ NAME:
 		log.Printf("User connected: %s\n", name)
 
 		sendWelcome(conn, splash)
+		helpers.SendText(conn, []byte(fmt.Sprintf("To finish your game session type %q, to see server stats - %q\n", "exit", "stat")))
 
 		off := make(chan bool)
 		game := make(chan string)
