@@ -9,6 +9,7 @@ import (
 	"log"
 
 	"Game/db"
+	"net/url"
 )
 
 func CityExists(name string) (bool, error) {
@@ -30,8 +31,8 @@ func CityExists(name string) (bool, error) {
 }
 
 func checkCityOSM(name string) (bool, error) {
-	u := "http://nominatim.openstreetmap.org/search?format=json&q=%s&limit=1&featuretype=city"
-	encName := strings.Replace(name, " ", "+", -1)
+	u := "http://nominatim.openstreetmap.org/search/%s?format=json&limit=1&featuretype=city"
+	encName := url.QueryEscape(name)
 
 	resp, err := http.Get(fmt.Sprintf(u, encName))
 	if err != nil {
