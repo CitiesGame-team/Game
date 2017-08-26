@@ -78,7 +78,7 @@ func ReadString(conn net.Conn) (string, error) {
 	}
 
 	remove := []string{
-		"\n", "\r", "\b"
+		"\n", "\r", "\b",
 	}
 
 	for _, r := range remove {

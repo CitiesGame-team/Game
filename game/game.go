@@ -190,7 +190,6 @@ func handleConnection(conn net.Conn, splash []byte) {
 				if err != nil {
 					return
 				}
-
 				log.Printf("User %s starts game with bot", player.Name)
 				removePlayer(player)
 

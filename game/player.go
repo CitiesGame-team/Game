@@ -75,39 +75,44 @@ func (player *Player) reader() {
 		} else if message == "" {
 
 		} else if player.game != nil && player.game.priority == *player.game.stage {
-
-			str := player.game.lastTown
-			words := strings.Split(message, " ")
-			town := strings.ToUpper(words[0][:1]) + strings.ToLower(words[0][1:])
-			for _, word := range words[1:] {
-				town = town + " " + strings.ToUpper(word[:1]) + strings.ToLower(word[1:])
-			}
-
-			cityModel, err := db.CityGet(town)
-
-			if err == nil && player.game.gameModel.HasCity(cityModel) {
-				helpers.SendRed(player.Conn, []byte(fmt.Sprintf("This city %q is already used in this game. Think of another city!\n", town)))
-				continue
-			}
-
-			exist, err := helpers.CityExists(town)
-			if !exist || err != nil {
-				helpers.SendRed(player.Conn, []byte(fmt.Sprintf("Unknown town. Try again.\n")))
-			} else if str != "" && strings.ToLower(str[len(str)-1:]) != strings.ToLower(town[:1]) {
-				helpers.SendRed(player.Conn,
-					[]byte(fmt.Sprintf("Think up a city starting with the letter %s.\n", strings.ToUpper(str[len(str)-1:]))))
-			} else {
-				cityModel, err = db.CityGet(town)
-
-				if err != nil {
-					helpers.SendRed(player.Conn, []byte("Cannot check and save your town. Try again, please!\n"))
-					continue
-				}
-				player.game.gameModel.AddCity(cityModel)
-				player.game.nextMove()
-				player.game.chOut <- town
-			}
+			player.safetyMove(message)
 		}
+	}
+}
+
+func (player *Player) safetyMove(message string) {
+	player.game.lock.Lock()
+	defer player.game.lock.Unlock()
+	str := player.game.lastTown
+	words := strings.Split(message, " ")
+	town := strings.ToUpper(words[0][:1]) + strings.ToLower(words[0][1:])
+	for _, word := range words[1:] {
+		town = town + " " + strings.ToUpper(word[:1]) + strings.ToLower(word[1:])
+	}
+
+	cityModel, err := db.CityGet(town)
+
+	if err == nil && player.game.gameModel.HasCity(cityModel) {
+		helpers.SendRed(player.Conn, []byte(fmt.Sprintf("This city %q is already used in this game. Think of another city!\n", town)))
+		return
+	}
+	exist, err := helpers.CityExists(town)
+	if !exist || err != nil {
+		helpers.SendRed(player.Conn, []byte(fmt.Sprintf("Unknown town. Try again.\n")))
+	} else if str != "" && strings.ToLower(str[len(str)-1:]) != strings.ToLower(town[:1]) {
+		helpers.SendRed(player.Conn,
+			[]byte(fmt.Sprintf("Think up a city starting with the letter %s.\n", strings.ToUpper(str[len(str)-1:]))))
+	} else {
+		cityModel, err = db.CityGet(town)
+
+		if err != nil {
+			helpers.SendRed(player.Conn, []byte("Cannot check and save your town. Try again, please!\n"))
+			return
+		}
+		player.game.gameModel.AddCity(cityModel)
+		//player.game.nextMove()
+		*(player.game.stage) = (*(player.game.stage) + 1) % 2
+		player.game.chOut <- town
 	}
 }
 
