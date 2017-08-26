@@ -12,6 +12,7 @@ import (
 
 	"Game/db"
 	"Game/helpers"
+	"unicode/utf8"
 )
 
 type Player struct {
@@ -72,6 +73,42 @@ func (player *Player) reader() {
 			}
 			player.offline <- true
 			return
+		} else if message == "stat" {
+			citiesStat, err1 := helpers.GetCitiesStat()
+			gameStat, err2 := helpers.GetGameStat()
+
+			if err1 != nil && err2 != nil {
+				helpers.SendRed(player.Conn, []byte("\nCannot provide statistics right now...\n\n"))
+				continue
+			}
+
+			if err1 == nil {
+				maxLength := 0
+				for _, city := range citiesStat {
+					l := utf8.RuneCountInString(city.Name)
+					if maxLength < l {
+						maxLength = l
+					}
+				}
+				maxLength += 5
+
+				helpers.SendGreen(player.Conn, []byte("Top cities:\n"))
+				for _, topCity := range citiesStat {
+					helpers.SendBlue(player.Conn, []byte(fmt.Sprintf("%s ", topCity.Name)))
+					helpers.SendText(player.Conn, []byte(strings.Repeat(" ", maxLength-utf8.RuneCountInString(topCity.Name))))
+					helpers.SendText(player.Conn, []byte(fmt.Sprintf("\t// %d\n", topCity.Count)))
+				}
+			}
+
+			if err2 == nil {
+				helpers.SendGreen(player.Conn, []byte("Game stats:\n"))
+				helpers.SendBlue(player.Conn, []byte(fmt.Sprintf("Total games: ")))
+				helpers.SendText(player.Conn, []byte(fmt.Sprintf("%d\n", gameStat.Games)))
+				helpers.SendBlue(player.Conn, []byte(fmt.Sprintf("Players: ")))
+				helpers.SendText(player.Conn, []byte(fmt.Sprintf("%d\n", gameStat.Players)))
+				helpers.SendBlue(player.Conn, []byte(fmt.Sprintf("Cities: ")))
+				helpers.SendText(player.Conn, []byte(fmt.Sprintf("%d\n\n", gameStat.Cities)))
+			}
 		} else if message == "" {
 
 		} else if player.game != nil && player.game.priority == *player.game.stage {
