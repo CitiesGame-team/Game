@@ -17,6 +17,7 @@ var (
 	back  = []byte{27, 91, 1, 68}
 	red   = []byte("\x1b[33m")
 	green = []byte("\x1b[32m")
+	blue  = []byte("\x1b[34m")
 	white = []byte("\x1b[37m")
 )
 
@@ -65,6 +66,10 @@ func SendRed(conn net.Conn, text []byte) error {
 
 func SendGreen(conn net.Conn, text []byte) error {
 	return SendColor(conn, text, green)
+}
+
+func SendBlue(conn net.Conn, text []byte) error {
+	return SendColor(conn, text, blue)
 }
 
 func ReadString(conn net.Conn) (string, error) {
