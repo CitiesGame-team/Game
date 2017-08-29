@@ -2,7 +2,6 @@ package game
 
 import (
 	"bufio"
-	//	"errors"
 	"fmt"
 	"log"
 	"net"
@@ -65,15 +64,15 @@ func (player *Player) reader() {
 			player.offline <- true
 			return
 		}
-		message = strings.Replace(strings.Replace(strings.Replace(message, "\n", "", -1), "\r", "", -1), "\b", "", -1)
+		message = helpers.Processing(message)
 
-		if message == "exit" {
+		if message == "Exit" {
 			if player.game != nil {
 				player.game.chOut <- "exit"
 			}
 			player.offline <- true
 			return
-		} else if message == "stat" {
+		} else if message == "Stat" {
 			citiesStat, err1 := helpers.GetCitiesStat()
 			gameStat, err2 := helpers.GetGameStat()
 
@@ -121,35 +120,28 @@ func (player *Player) safetyMove(message string) {
 	player.game.lock.Lock()
 	defer player.game.lock.Unlock()
 	str := player.game.lastTown
-	words := strings.Split(message, " ")
-	town := strings.ToUpper(words[0][:1]) + strings.ToLower(words[0][1:])
-	for _, word := range words[1:] {
-		town = town + " " + strings.ToUpper(word[:1]) + strings.ToLower(word[1:])
-	}
-
-	cityModel, err := db.CityGet(town)
+	cityModel, err := db.CityGet(message)
 
 	if err == nil && player.game.gameModel.HasCity(cityModel) {
-		helpers.SendRed(player.Conn, []byte(fmt.Sprintf("This city %q is already used in this game. Think of another city!\n", town)))
+		helpers.SendRed(player.Conn, []byte(fmt.Sprintf("This city %q is already used in this game. Think of another city!\n", message)))
 		return
 	}
-	exist, err := helpers.CityExists(town)
+	exist, err := helpers.CityExists(message)
 	if !exist || err != nil {
 		helpers.SendRed(player.Conn, []byte(fmt.Sprintf("Unknown town. Try again.\n")))
-	} else if str != "" && strings.ToLower(str[len(str)-1:]) != strings.ToLower(town[:1]) {
+	} else if str != "" && strings.ToLower(str[len(str)-1:]) != strings.ToLower(message[:1]) {
 		helpers.SendRed(player.Conn,
 			[]byte(fmt.Sprintf("Think up a city starting with the letter %s.\n", strings.ToUpper(str[len(str)-1:]))))
 	} else {
-		cityModel, err = db.CityGet(town)
+		cityModel, err = db.CityGet(message)
 
 		if err != nil {
 			helpers.SendRed(player.Conn, []byte("Cannot check and save your town. Try again, please!\n"))
 			return
 		}
 		player.game.gameModel.AddCity(cityModel)
-		//player.game.nextMove()
 		*(player.game.stage) = (*(player.game.stage) + 1) % 2
-		player.game.chOut <- town
+		player.game.chOut <- message
 	}
 }
 

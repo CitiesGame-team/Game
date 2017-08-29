@@ -91,3 +91,23 @@ func ReadString(conn net.Conn) (string, error) {
 	}
 	return line, nil
 }
+
+func Processing(line string) string {
+	remove := []string{
+		"\n", "\r", "\b",
+	}
+	for _, r := range remove {
+		line = strings.Replace(line, r, "", -1)
+	}
+	words := strings.Split(line, " ")
+	line = ""
+	for _, r := range words {
+		if r != "" {
+			line = line + strings.ToUpper(r[:1]) + strings.ToLower(r[1:]) + " "
+		}
+	}
+	if line != "" {
+		line = line[:len(line)-1]
+	}
+	return line
+}
