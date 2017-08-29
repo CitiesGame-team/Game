@@ -21,3 +21,9 @@ make run
 ```
 telnet localhost 9000
 ```
+
+## Play on the server
+
+```
+telnet croco.online 9033
+```
