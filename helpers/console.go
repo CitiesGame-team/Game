@@ -10,11 +10,11 @@ import (
 // http://www.isthe.com/chongo/tech/comp/ansi_escapes.html
 var (
 	reset = []byte{27, 91, 13}
-	home  = []byte{27, 91, 72}
-	clear = []byte{27, 91, 50, 74}
-	up    = []byte{27, 91, 1, 65}
-	down  = []byte{27, 91, 1, 66}
-	back  = []byte{27, 91, 1, 68}
+	home  = []byte("\x1b[H")  //{27, 91, 72}
+	clear = []byte("\x1b[2J") //{27, 91, 50, 74}
+	up    = []byte("\x1b[1A") //{27, 91, 1, 65}
+	down  = []byte("\x1b[1B") //{27, 91, 1, 66}
+	back  = []byte("\x1b[1D") //{27, 91, 1, 68}
 	red   = []byte("\x1b[33m")
 	green = []byte("\x1b[32m")
 	blue  = []byte("\x1b[34m")
