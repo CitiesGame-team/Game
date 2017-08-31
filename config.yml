@@ -1,0 +1,12 @@
+name: cities game
+splash_file: ./splash.txt
+cities_base_file: ./cities_base.yml
+
+db:
+  conn_string: user:password@/cities
+  pool_max_idle: 10
+  pool_max_open: 20
+
+server:
+  port: 9000
+  host: ""
